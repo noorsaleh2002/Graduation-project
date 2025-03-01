@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:gp_2/utils/App_constant.dart';
 import 'package:lottie/lottie.dart';
+
+import 'sign-up-screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -20,6 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: AppConstant.appMainColor,
+          centerTitle: true,
           title: Text(
             "Sign In",
             style: TextStyle(
@@ -35,9 +39,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   : Column(
                       children: [Lottie.asset('assests/images/start.json')],
                     ),
-              SizedBox(
-                height: Get.height / 20,
-              ),
               Container(
                   margin: EdgeInsets.symmetric(horizontal: 5.0),
                   width: Get.width,
@@ -61,7 +62,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       cursorColor: AppConstant.appMainColor,
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                           hintText: "Password",
                           prefixIcon: Icon(Icons.password),
@@ -80,6 +81,45 @@ class _SignInScreenState extends State<SignInScreen> {
                       color: AppConstant.appMainColor,
                       fontWeight: FontWeight.bold),
                 ),
+              ),
+              SizedBox(
+                height: Get.height / 20,
+              ),
+              Material(
+                child: Container(
+                  width: Get.width / 2,
+                  height: Get.height / 18,
+                  decoration: BoxDecoration(
+                    color: AppConstant.appMainColor,
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: TextButton(
+                    child: Text(
+                      "SIGN IN",
+                      style: TextStyle(color: AppConstant.appTextColor),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: Get.height / 18,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Don't have an account?",
+                      style: TextStyle(
+                        color: AppConstant.appMainColor,
+                      )),
+                  GestureDetector(
+                    onTap: () => Get.offAll(SignUpScreen()),
+                    child: Text("Sign up",
+                        style: TextStyle(
+                            color: AppConstant.appMainColor,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ],
               )
             ],
           ),
