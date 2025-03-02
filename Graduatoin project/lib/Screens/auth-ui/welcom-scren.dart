@@ -1,12 +1,16 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gp_2/Screens/auth-ui/sign-in-screen.dart';
 import 'package:gp_2/utils/App_constant.dart';
 import 'package:lottie/lottie.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+import '../../controllers/google-sign-in-controller.dart';
 
+class WelcomeScreen extends StatelessWidget {
+  WelcomeScreen({super.key});
+  final GoogleSignInController _googleSignInController =
+      Get.put(GoogleSignInController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +35,7 @@ class WelcomeScreen extends StatelessWidget {
             Container(
                 margin: EdgeInsets.only(top: 20.0),
                 child: Text(
-                  "Happy Studing ",
+                  "Wishing you a joyful study session! ",
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 )),
             SizedBox(
@@ -55,7 +59,9 @@ class WelcomeScreen extends StatelessWidget {
                     "Sign in with google",
                     style: TextStyle(color: AppConstant.appTextColor),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _googleSignInController.signInWithGoogle();
+                  },
                 ),
               ),
             ),
@@ -76,7 +82,9 @@ class WelcomeScreen extends StatelessWidget {
                     "Sign in with Email",
                     style: TextStyle(color: AppConstant.appTextColor),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => SignInScreen());
+                  },
                 ),
               ),
             )

@@ -19,3 +19,9 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+/*
+tasks.withType(JavaCompile) {
+    options.fork = true
+    options.forkOptions.executable = "C:/Program Files/Java/jdk-17/bin/javac.exe"
+}
+*/
