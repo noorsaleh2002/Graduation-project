@@ -1,9 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:gp_2/Screens/BookDetails/HeaderWidget.dart';
 import 'package:gp_2/utils/App_constant.dart';
-
-import '../../Componant/BackButton.dart';
 
 class BookDetails extends StatelessWidget {
   const BookDetails({super.key});
@@ -11,37 +10,76 @@ class BookDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            height: 500,
-            padding: EdgeInsets.all(20),
-            color: AppConstant.appMainColor,
-            child: Row(
-              children: [
-                Expanded(
-                    child: Column(
-                  children: [
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MyBackbutton(),
-                        Icon(
-                          Icons.favorite,
-                          color: AppConstant.appTextColor,
-                        )
-                      ],
-                    ),
-                    Text("Data"),
-                  ],
-                ))
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              //height: 550,
+              padding: EdgeInsets.all(20),
+              color: AppConstant.appMainColor,
+              child: Row(
+                children: [
+                  Expanded(child: BookDetailHeader()),
+                ],
+              ),
             ),
-          )
-        ],
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text("About File",
+                          style: TextStyle(
+                            color: AppConstant.appTextColor2,
+                          )),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                            "some text some textsome text some text some text some text",
+                            style: TextStyle(
+                              color: AppConstant.appTextColor2,
+                            )),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text("About File",
+                          style: TextStyle(
+                            color: AppConstant.appTextColor2,
+                          )),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                            "some text some textsome text some text some text some text",
+                            style: TextStyle(
+                              color: AppConstant.appTextColor2,
+                            )),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
