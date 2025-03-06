@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:gp_2/Screens/BookDetails/BookActionButton.dart';
 import 'package:gp_2/Screens/BookDetails/HeaderWidget.dart';
 import 'package:gp_2/utils/App_constant.dart';
 
@@ -35,8 +36,7 @@ class BookDetails extends StatelessWidget {
                     children: [
                       Text("About File",
                           style: TextStyle(
-                            color: AppConstant.appTextColor2,
-                          )),
+                              color: AppConstant.appTextColor2, fontSize: 30)),
                     ],
                   ),
                   SizedBox(
@@ -46,10 +46,10 @@ class BookDetails extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                            "some text some textsome text some text some text some text",
+                            "some text some textsome text  textsome text textsome text textsome text textsome texttextsome texttextsome texttextsome texttextsome text textsome text some text some text some text",
                             style: TextStyle(
-                              color: AppConstant.appTextColor2,
-                            )),
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 20)),
                       ),
                     ],
                   ),
@@ -57,8 +57,7 @@ class BookDetails extends StatelessWidget {
                     children: [
                       Text("About File",
                           style: TextStyle(
-                            color: AppConstant.appTextColor2,
-                          )),
+                              color: AppConstant.appTextColor2, fontSize: 30)),
                     ],
                   ),
                   SizedBox(
@@ -68,13 +67,17 @@ class BookDetails extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                            "some text some textsome text some text some text some text",
+                            "some text some textsome text  textsome text textsome text textsome text textsome texttextsome texttextsome texttextsome texttextsome text textsome text some text some text some text",
                             style: TextStyle(
-                              color: AppConstant.appTextColor2,
-                            )),
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 20)),
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Bookactionbutton(),
                 ],
               ),
             )
