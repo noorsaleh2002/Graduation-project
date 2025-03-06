@@ -27,7 +27,7 @@ class Bookactionbutton extends StatelessWidget {
               ),
               Text("READ BOOK",
                   style:
-                      TextStyle(color: AppConstant.appTextColor, fontSize: 20))
+                      TextStyle(color: AppConstant.appTextColor, fontSize: 15))
             ],
           ),
           Container(
@@ -47,7 +47,7 @@ class Bookactionbutton extends StatelessWidget {
               ),
               Text("PLAY BOOK",
                   style:
-                      TextStyle(color: AppConstant.appTextColor, fontSize: 20))
+                      TextStyle(color: AppConstant.appTextColor, fontSize: 15))
             ],
           )
         ],
