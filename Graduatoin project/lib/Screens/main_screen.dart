@@ -1,20 +1,17 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'dart:ffi';
+// ignore_for_file: file_names, unused_local_variable, no_leading_underscores_for_local_identifiers, avoid_print
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:gp_2/Componant/MyFiles.dart';
-import 'package:gp_2/Screens/auth-ui/welcom-scren.dart';
+import 'package:gp_2/Screens/BookDetails/BookDetail.dart';
 
-import '../Componant/BookCard.dart';
+import '../Componant/FileCard.dart';
 import '../models/Data.dart';
 import '../utils/App_constant.dart';
 import '../widgets/SearchTextFild.dart';
 import '../widgets/custom-drower-widget.dart';
+import 'auth-ui/welcom-scren.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -26,9 +23,12 @@ class MainScreen extends StatelessWidget {
         backgroundColor: AppConstant.appMainColor,
         title: Text(
           AppConstant.appMainName,
-          style: TextStyle(color: AppConstant.appTextColor),
+          style: TextStyle(
+            color: AppConstant.appTextColor,
+          ),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: AppConstant.appTextColor),
         actions: [
           GestureDetector(
             onTap: () async {
@@ -40,20 +40,23 @@ class MainScreen extends StatelessWidget {
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.logout),
+              child: Icon(
+                Icons.logout,
+                color: AppConstant.appTextColor,
+              ),
             ),
           )
         ],
       ),
       drawer: DrawerWidget(),
       body: SingleChildScrollView(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10),
-                color: AppConstant.appMainColor,
-                height: Get.height / 5,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              color: AppConstant.appMainColor,
+              height: Get.height / 4.5,
+              child: Expanded(
                 child: Row(
                   children: [
                     Expanded(
@@ -96,57 +99,42 @@ class MainScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text("MY Files"),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    /*  GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 0.75,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Your Files: ',
+                        style: TextStyle(
+                          color: AppConstant.appTextColor2,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                       ),
-                      itemCount: bookData.length,
-                      itemBuilder: (context, index) {
-                        return Bookcard(
-                          coverUrl: bookData[index].coverUrl ??
-                              "assests/images/book.jpeg",
-                          title: bookData[index].title ?? "NO Title",
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Column(
+                    children: FileData.map((e) => FileCard(
+                          title: e.title!,
+                          coverUrl: e.coverUrl!,
                           ontap: () {
-                            print("Book ${bookData[index].title} clicked");
+                            Get.to(BookDetails());
                           },
-                        );
-                      },
-                    )*/
-                    Column(
-                        children: bookData
-                            .map((e) => MyFiles(
-                                title: e.title!,
-                                coverUrl: e.coverUrl!,
-                                author: e.author!,
-                                price: e.price!,
-                                rating: e.rating!,
-                                totalRating: ""))
-                            .toList())
-                  ],
-                ),
-              )
-            ],
-          ),
+                        )).toList(),
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );

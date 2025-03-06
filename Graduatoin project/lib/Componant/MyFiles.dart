@@ -36,7 +36,7 @@ class MyFiles extends StatelessWidget {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                        color: AppConstant.appMainColor,
+                        color: const Color.fromARGB(255, 242, 210, 248),
                         spreadRadius: 2,
                         blurRadius: 8,
                         offset: Offset(2, 2))
