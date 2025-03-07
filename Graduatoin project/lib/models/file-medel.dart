@@ -4,7 +4,7 @@ class FileModel {
   String? description;
   int? pages;
   String? language;
-  String? bookUrl;
+  String? fileurl;
   String? category;
   String? coverUrl;
 
@@ -14,7 +14,7 @@ class FileModel {
       this.description,
       this.pages,
       this.language,
-      this.bookUrl,
+      this.fileurl,
       this.category,
       this.coverUrl});
 
@@ -38,7 +38,7 @@ class FileModel {
       coverUrl = json["coverUrl"];
     }
     if (json["bookUrl"] is String) {
-      bookUrl = json["bookUrl"];
+      fileurl = json["bookUrl"];
     }
     if (json["categoryd"] is String) {
       category = json["category"];
@@ -51,7 +51,7 @@ class FileModel {
     _data["description"] = description;
     _data["pages"] = pages;
     _data["language"] = language;
-    _data["bookUrl"] = bookUrl;
+    _data["bookUrl"] = fileurl;
     _data["category"] = category;
     _data["coverUrl"] = coverUrl;
     return _data;

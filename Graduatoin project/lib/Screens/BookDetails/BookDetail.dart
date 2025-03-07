@@ -1,12 +1,16 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, file_names
 
 import 'package:flutter/material.dart';
-import 'package:gp_2/Screens/BookDetails/BookActionButton.dart';
-import 'package:gp_2/Screens/BookDetails/HeaderWidget.dart';
-import 'package:gp_2/utils/App_constant.dart';
 
-class BookDetails extends StatelessWidget {
-  const BookDetails({super.key});
+import '../../models/file-medel.dart';
+import '../../utils/App_constant.dart';
+import 'BookActionButton.dart';
+import 'HeaderWidget.dart';
+
+class FileDetails extends StatelessWidget {
+  final FileModel file;
+
+  const FileDetails({super.key, required this.file});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,15 @@ class BookDetails extends StatelessWidget {
               color: AppConstant.appMainColor,
               child: Row(
                 children: [
-                  Expanded(child: BookDetailHeader()),
+                  Expanded(
+                      child: FileDetailHeader(
+                    coverUrl: file.coverUrl!,
+                    title: file.title!,
+                    description: file.description!,
+                    pages: file.pages.toString(),
+                    language: file.language.toString(),
+                    audioLen: '',
+                  )),
                 ],
               ),
             ),
@@ -45,29 +57,7 @@ class BookDetails extends StatelessWidget {
                   Row(
                     children: [
                       Flexible(
-                        child: Text(
-                            "some text some textsome text  textsome text textsome text textsome text textsome texttextsome texttextsome texttextsome texttextsome text textsome text some text some text some text",
-                            style: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                                fontSize: 20)),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text("About File",
-                          style: TextStyle(
-                              color: AppConstant.appTextColor2, fontSize: 30)),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                            "some text some textsome text  textsome text textsome text textsome text textsome texttextsome texttextsome texttextsome texttextsome text textsome text some text some text some text",
+                        child: Text(file.description!,
                             style: TextStyle(
                                 color: const Color.fromARGB(255, 0, 0, 0),
                                 fontSize: 20)),
@@ -75,9 +65,11 @@ class BookDetails extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 160,
                   ),
-                  Bookactionbutton(),
+                  Fileactionbutton(
+                    fileUrl: file.fileurl!,
+                  ),
                 ],
               ),
             )

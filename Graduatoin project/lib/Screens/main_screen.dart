@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:gp_2/Screens/BookDetails/BookDetail.dart';
 
 import '../Componant/FileCard.dart';
 import '../models/Data.dart';
 import '../utils/App_constant.dart';
 import '../widgets/SearchTextFild.dart';
 import '../widgets/custom-drower-widget.dart';
+import 'BookDetails/BookDetail.dart';
 import 'auth-ui/welcom-scren.dart';
 
 class MainScreen extends StatelessWidget {
@@ -20,6 +20,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: AppConstant.appTextColor),
         backgroundColor: AppConstant.appMainColor,
         title: Text(
           AppConstant.appMainName,
@@ -28,7 +29,6 @@ class MainScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        iconTheme: IconThemeData(color: AppConstant.appTextColor),
         actions: [
           GestureDetector(
             onTap: () async {
@@ -92,7 +92,7 @@ class MainScreen extends StatelessWidget {
                           SizedBox(
                             height: 20,
                           ),
-                          SearchTextField(),
+                          Search(),
                         ],
                       ),
                     ),
@@ -119,15 +119,15 @@ class MainScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  SizedBox(height: 10),
                   Column(
                     children: FileData.map((e) => FileCard(
                           title: e.title!,
                           coverUrl: e.coverUrl!,
                           ontap: () {
-                            Get.to(BookDetails());
+                            Get.to(FileDetails(
+                              file: e,
+                            ));
                           },
                         )).toList(),
                   )

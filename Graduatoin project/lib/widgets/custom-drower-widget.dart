@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../Screens/AddBook/AddNewBook.dart';
 import '../Screens/auth-ui/welcom-scren.dart';
 import '../Screens/main_screen.dart';
 
@@ -99,7 +100,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
               child: ListTile(
                 onTap: () {
-                  //Get.to(() => AllProductsAScreen());
+                  Get.to(() => AddBookPage());
                 },
                 titleAlignment: ListTileTitleAlignment.center,
                 title: Text("Add file"),

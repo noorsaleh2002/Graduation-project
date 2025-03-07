@@ -53,7 +53,7 @@ class FileCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10),
                     child: Text(
                       'Title: $title ',
                       style: TextStyle(

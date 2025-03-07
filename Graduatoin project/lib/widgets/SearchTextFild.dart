@@ -1,9 +1,11 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 import '../utils/App_constant.dart';
 
-class SearchTextField extends StatelessWidget {
-  const SearchTextField({super.key});
+class Search extends StatelessWidget {
+  const Search({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +17,13 @@ class SearchTextField extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 20,
+            width: 10,
           ),
           Icon(Icons.search),
-          SizedBox(
-            width: 20,
-          ),
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                  hintText: "Search here ...",
+                  hintText: 'Search here ...',
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                   )),

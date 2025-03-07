@@ -45,6 +45,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   firebase_messaging: ^15.2.4
   flutter_svg: ^2.0.17
+  syncfusion_flutter_pdfviewer: ^24.2.7
+  
 
 dev_dependencies:
   flutter_test:
