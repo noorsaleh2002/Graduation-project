@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../Screens/AddBook/AddNewBook.dart';
 import '../Screens/auth-ui/welcom-scren.dart';
 import '../Screens/main_screen.dart';
+import '../controllers/book-controller.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -17,6 +18,7 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
+  FileController fileController = Get.put(FileController());
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -35,16 +37,16 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: ListTile(
-                titleAlignment: ListTileTitleAlignment.center,
-                title: Text("username"),
-                subtitle: Text(
-                  "email",
-                ),
-                leading: CircleAvatar(
-                  radius: 22.0,
-                  backgroundColor: Colors.purple[100],
-                ),
-              ),
+                  titleAlignment: ListTileTitleAlignment.center,
+                  title:
+                      Text("${fileController.fAuth.currentUser!.displayName}"),
+                  subtitle: Text(
+                    '${fileController.fAuth.currentUser!.email}',
+                  ),
+                  leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                          '${fileController.fAuth.currentUser!.photoURL}'))),
             ),
             Divider(
               indent: 10.0,
@@ -100,7 +102,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
               child: ListTile(
                 onTap: () {
-                  Get.to(() => AddBookPage());
+                  Get.to(() => AddFilePage());
                 },
                 titleAlignment: ListTileTitleAlignment.center,
                 title: Text("Add file"),

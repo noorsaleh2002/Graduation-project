@@ -1,17 +1,27 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:gp_2/Componant/BackButton.dart';
-import 'package:gp_2/Componant/MyTextFormField.dart';
-import 'package:gp_2/utils/App_constant.dart';
+import 'package:get/get.dart';
 
+import '../../Componant/BackButton.dart';
 import '../../Componant/MultiLineTextFormField.dart';
+import '../../Componant/MyTextFormField.dart';
+import '../../controllers/book-controller.dart';
+import '../../controllers/pdf-controller.dart';
+import '../../utils/App_constant.dart';
+import '../../widgets/custom-drower-widget.dart';
 
-class AddBookPage extends StatelessWidget {
-  const AddBookPage({super.key});
+class AddFilePage extends StatelessWidget {
+  const AddFilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
+    PdfController pdfController = Get.put(PdfController());
+    FileController fileController = Get.put(FileController());
+
     return Scaffold(
+      //drawer: DrawerWidget(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -46,17 +56,38 @@ class AddBookPage extends StatelessWidget {
                       SizedBox(
                         height: 60,
                       ),
-                      Container(
-                        height: 190,
-                        width: 150,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: AppConstant.appTextColor),
-                        child: Icon(
-                          Icons.add,
-                          color: AppConstant.appMainColor,
-                        ),
-                      ),
+                      InkWell(
+                          onTap: () {
+                            fileController.pickImage();
+                          },
+                          child: Obx(
+                            () => Container(
+                              height: 190,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: AppConstant.appTextColor),
+                              child: Center(
+                                child: fileController.isImageUploading.value
+                                    ? CircularProgressIndicator(
+                                        color: AppConstant.appMainColor,
+                                      )
+                                    : fileController.imageUrl.value == ''
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Icon(
+                                              Icons.add,
+                                              color: AppConstant.appMainColor,
+                                            ),
+                                          )
+                                        : Image.network(
+                                            fileController.imageUrl.value,
+                                            fit: BoxFit.cover,
+                                          ),
+                              ),
+                            ),
+                          )),
                       SizedBox(
                         height: 20,
                       ),
@@ -80,53 +111,72 @@ class AddBookPage extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                              color: AppConstant.appMainColor,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.upload_file,
-                                  color: AppConstant.appTextColor),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "PDF FILE",
-                                style:
-                                    TextStyle(color: AppConstant.appTextColor),
-                              ),
-                            ],
+                        child: Obx(
+                          () => Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                                color: fileController.pdfUrl.value == ''
+                                    ? AppConstant.appMainColor
+                                    : AppConstant.appTextColor,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: fileController.isPdfUploading.value
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppConstant.appTextColor,
+                                    ),
+                                  )
+                                : fileController.pdfUrl.value == ""
+                                    ? InkWell(
+                                        onTap: () {
+                                          fileController.pickPDF();
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.upload_file,
+                                                color:
+                                                    AppConstant.appTextColor),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "PDF FILE",
+                                              style: TextStyle(
+                                                  color:
+                                                      AppConstant.appTextColor),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : InkWell(
+                                        onTap: () {
+                                          fileController.pdfUrl.value = '';
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.upload_file,
+                                                color:
+                                                    AppConstant.appTextColor),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "Uploaded",
+                                              style: TextStyle(
+                                                  color:
+                                                      AppConstant.appMainColor),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                           ),
                         ),
                       ),
                       SizedBox(
                         width: 10,
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                              color: AppConstant.appMainColor,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.audio_file,
-                                  color: AppConstant.appTextColor),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "AUDIO FILE",
-                                style:
-                                    TextStyle(color: AppConstant.appTextColor),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -134,30 +184,39 @@ class AddBookPage extends StatelessWidget {
                     height: 10,
                   ),
                   MyTextFormField(
-                      hintText: "Book title",
-                      icon: Icons.book_rounded,
-                      controller: controller),
+                    hintText: "Book title",
+                    icon: Icons.book_rounded,
+                    controller: fileController.title,
+                  ),
                   SizedBox(
                     height: 10,
                   ),
                   MultiLineTextFormField(
                     hintText: "Description",
-                    controller: controller,
+                    controller: fileController.description,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   MyTextFormField(
+                      isNumber: true,
                       hintText: "Total Pages",
                       icon: Icons.numbers,
-                      controller: controller),
+                      controller: fileController.pages),
                   SizedBox(
                     height: 10,
                   ),
                   MyTextFormField(
                       hintText: "Language",
                       icon: Icons.language,
-                      controller: controller),
+                      controller: fileController.language),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  MyTextFormField(
+                      hintText: "Audio Len",
+                      icon: Icons.audiotrack,
+                      controller: fileController.aduioLen),
                   SizedBox(
                     height: 20,
                   ),
@@ -191,28 +250,38 @@ class AddBookPage extends StatelessWidget {
                         width: 10,
                       ),
                       Expanded(
-                        child: Container(
+                          child: Obx(
+                        () => Container(
                           padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
                               color: AppConstant.appMainColor,
                               borderRadius: BorderRadius.circular(15)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.audio_file,
-                                  color: AppConstant.appTextColor),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "POST",
-                                style:
-                                    TextStyle(color: AppConstant.appTextColor),
-                              ),
-                            ],
-                          ),
+                          child: fileController.isPostUploading.value
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : InkWell(
+                                  onTap: () {
+                                    fileController.createFile();
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.audio_file,
+                                          color: AppConstant.appTextColor),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        "POST",
+                                        style: TextStyle(
+                                            color: AppConstant.appTextColor),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                         ),
-                      ),
+                      )),
                     ],
                   ),
                 ],

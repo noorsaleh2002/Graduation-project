@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../Componant/FileCard.dart';
+import '../controllers/book-controller.dart';
 import '../models/Data.dart';
 import '../utils/App_constant.dart';
 import '../widgets/SearchTextFild.dart';
@@ -18,6 +19,7 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FileController fileController = Get.put(FileController());
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: AppConstant.appTextColor),
@@ -71,7 +73,7 @@ class MainScreen extends StatelessWidget {
                                   style: TextStyle(
                                     color: AppConstant.appTextColor,
                                   )),
-                              Text("Noor",
+                              Text("Aya",
                                   style: TextStyle(
                                     color: AppConstant.appTextColor,
                                   )),
@@ -83,7 +85,8 @@ class MainScreen extends StatelessWidget {
                           Row(
                             children: [
                               Flexible(
-                                  child: Text("Time to enhance your knowledge",
+                                  child: Text(
+                                      "Time to read file and enhance your knowledge",
                                       style: TextStyle(
                                           color: AppConstant.appTextColor,
                                           fontSize: 11))),
@@ -120,16 +123,18 @@ class MainScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 10),
+                  //obx
                   Column(
-                    children: FileData.map((e) => FileCard(
-                          title: e.title!,
-                          coverUrl: e.coverUrl!,
-                          ontap: () {
-                            Get.to(FileDetails(
-                              file: e,
-                            ));
-                          },
-                        )).toList(),
+                    children: /* fileController.fileData*/ FileData.map(
+                        (e) => FileCard(
+                              title: e.title!,
+                              coverUrl: e.coverUrl!,
+                              ontap: () {
+                                Get.to(FileDetails(
+                                  file: e,
+                                ));
+                              },
+                            )).toList(),
                   )
                 ],
               ),
