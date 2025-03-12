@@ -42,11 +42,11 @@ class FileCard extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      // network
-                      coverUrl,
-                      width: 100,
-                    ),
+                    child: Image.network(
+                        // network
+                        coverUrl,
+                        width: 100,
+                        fit: BoxFit.cover),
                   )),
               SizedBox(height: 10),
               Expanded(

@@ -30,67 +30,76 @@ class FileController extends GetxController {
   int index = 0;
   RxBool isImageUploading = false.obs;
   RxBool isPdfUploading = false.obs;
-  RxBool isPostUploading = false.obs; // true
+  RxBool isPostUploading = false.obs;
   var fileData = RxList<FileModel>();
   var currentUserFiles = RxList<FileModel>();
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     getAllFiles();
     getUserFile();
   }
 
-  void getAllFiles() async {
-    fileData.clear();
-    Get.snackbar(
-      'Success',
-      "Get all Function",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppConstant.appMainColor,
-      colorText: AppConstant.appTextColor,
-    );
-    var files = await db.collection('Files').get();
-    for (var file in files.docs) {
-      fileData.add(FileModel.fromJson(file.data()));
+  // Fetch files uploaded by the user
+  Future<void> getUserFile() async {
+    currentUserFiles.clear(); // Clear the previous files list
+    try {
+      var files = await db
+          .collection('userFile')
+          .doc(fAuth.currentUser!.uid)
+          .collection('Files')
+          .get();
+
+      for (var file in files.docs) {
+        currentUserFiles.add(FileModel.fromJson(file.data()));
+      }
+    } catch (e) {
+      print("Error fetching user files: $e");
     }
   }
 
-  void getUserFile() async {
-    currentUserFiles.clear();
-    var files = await db
-        .collection('userFile')
-        .doc(fAuth.currentUser!.uid)
-        .collection('Files')
-        .get();
-
-    for (var file in files.docs) {
-      currentUserFiles.add(FileModel.fromJson(file.data()));
+  // Fetch all files (not just user's files)
+  Future<void> getAllFiles() async {
+    fileData.clear(); // Clear the previous files list
+    try {
+      var files = await db.collection('Files').get();
+      for (var file in files.docs) {
+        fileData.add(FileModel.fromJson(file.data()));
+      }
+    } catch (e) {
+      print("Error fetching all files: $e");
     }
   }
 
+  // Upload image function
   void pickImage() async {
     isImageUploading.value = true;
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera); // image.gallery
     if (image != null) {
-      print(image.path);
       uploadImageToFirebase(File(image.path));
     }
   }
 
+  // Upload image to Firebase Storage
   void uploadImageToFirebase(File image) async {
-    var uuid = Uuid();
-    var filename = uuid.v1();
-    var storageRef = storage.ref().child('Images/$filename');
-    var response = await storageRef.putFile(image);
-    String downloadURL = await storageRef.getDownloadURL();
-    imageUrl.value = downloadURL;
-    print('Download URL: $downloadURL');
-    isImageUploading.value = false;
+    try {
+      var uuid = Uuid();
+      var filename = uuid.v1();
+      var storageRef = storage.ref().child('Images/$filename');
+      var response = await storageRef.putFile(image);
+      String downloadURL = await storageRef.getDownloadURL();
+      imageUrl.value = downloadURL;
+    } catch (e) {
+      print("Error uploading image: $e");
+      Get.snackbar("Error", "Failed to upload image. Please try again.");
+    } finally {
+      isImageUploading.value = false; // Ensure it's set to false
+    }
   }
 
+  // Create a new file and upload it to Firestore
   void createFile() async {
     isPostUploading.value = true;
     var newfile = FileModel(
@@ -105,7 +114,6 @@ class FileController extends GetxController {
 
     await db.collection('File').add(newfile.toJson());
     addFileInUserDb(newfile);
-    //successMessage('File added to the db');
     isPostUploading.value = false;
     title.clear();
     description.clear();
@@ -125,41 +133,42 @@ class FileController extends GetxController {
     getUserFile();
   }
 
-  void pickPDF() async {
-    isPdfUploading.value = true;
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-
-    if (result != null) {
-      File file = File(result.files.first.path!);
-
-      if (file.existsSync()) {
-        Uint8List fileBytes = await file.readAsBytes();
-        String fileName = result.files.first.name;
-        print('File Bytes: $fileBytes');
-
-        final response =
-            await storage.ref().child("Pdf/$fileName").putData(fileBytes);
-
-        final downloadURL = await response.ref.getDownloadURL();
-        pdfUrl.value = downloadURL;
-        print(downloadURL);
-      } else {
-        print('File does not exist');
-      }
-    } else {
-      print('No file selectesd');
-    }
-    isPdfUploading.value = false;
-  }
-
+  // Add file to the user's collection in Firestore
   void addFileInUserDb(FileModel file) async {
     await db
         .collection('userFile')
         .doc(fAuth.currentUser!.uid)
         .collection('Files')
         .add(file.toJson());
+  }
+
+  // Pick a PDF file and upload it to Firebase Storage
+  void pickPDF() async {
+    try {
+      isPdfUploading.value = true;
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+
+      if (result != null) {
+        File file = File(result.files.first.path!);
+
+        if (file.existsSync()) {
+          Uint8List fileBytes = await file.readAsBytes();
+          String fileName = result.files.first.name;
+
+          var storageRef = storage.ref().child('Pdf/$fileName');
+          await storageRef.putData(fileBytes);
+          String downloadURL = await storageRef.getDownloadURL();
+          pdfUrl.value = downloadURL;
+        }
+      }
+    } catch (e) {
+      print("Error uploading PDF: $e");
+      Get.snackbar("Error", "Failed to upload PDF. Please try again.");
+    } finally {
+      isPdfUploading.value = false; // Ensure it's set to false
+    }
   }
 }

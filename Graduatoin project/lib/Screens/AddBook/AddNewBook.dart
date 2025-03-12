@@ -12,14 +12,17 @@ import '../../utils/App_constant.dart';
 import '../../widgets/custom-drower-widget.dart';
 
 class AddFilePage extends StatelessWidget {
-  const AddFilePage({super.key});
+  FileController fileController = Get.put(FileController());
+
+  AddFilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
     PdfController pdfController = Get.put(PdfController());
     FileController fileController = Get.put(FileController());
-
+    String userName = fileController.fAuth.currentUser?.displayName ?? "";
+    String firstName = userName.split(' ').first; // Getting the first name
     return Scaffold(
       //drawer: DrawerWidget(),
       body: SingleChildScrollView(
@@ -91,7 +94,7 @@ class AddFilePage extends StatelessWidget {
                       SizedBox(
                         height: 20,
                       ),
-                      Text("Noor saleh ",
+                      Text("${firstName}",
                           style: TextStyle(
                             color: AppConstant.appTextColor,
                           )),
@@ -223,26 +226,43 @@ class AddFilePage extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  width: 2, color: AppConstant.appMainColor)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.close,
-                                  color: AppConstant.appMainColor),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "CANCLE",
-                                style:
-                                    TextStyle(color: AppConstant.appMainColor),
-                              ),
-                            ],
+                        child: GestureDetector(
+                          onTap: () {
+                            // Clear all input fields
+                            fileController.title.clear();
+                            fileController.description.clear();
+                            fileController.pages.clear();
+                            fileController.language.clear();
+                            fileController.aduioLen.clear();
+                            fileController.isPostUploading.value = false;
+                            // Reset image and PDF selections
+                            fileController.imageUrl.value = '';
+                            fileController.pdfUrl.value = '';
+
+                            // Navigate back
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    width: 2, color: AppConstant.appMainColor)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.close,
+                                    color: AppConstant.appMainColor),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "CANCLE",
+                                  style: TextStyle(
+                                      color: AppConstant.appMainColor),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
