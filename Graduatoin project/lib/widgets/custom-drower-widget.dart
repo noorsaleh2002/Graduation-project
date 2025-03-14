@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../Screens/AddBook/AddNewBook.dart';
+import '../Screens/NotesScreen.dart';
 import '../Screens/auth-ui/welcom-scren.dart';
 import '../Screens/main_screen.dart';
 import '../controllers/book-controller.dart';
@@ -125,7 +126,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 trailing: Icon(Icons.arrow_forward),
                 onTap: () {
                   Get.back();
-                  // Get.to(() => AllOrdersScreenA());
+                  Get.to(() => Notesscreen());
                 },
               ),
             ),

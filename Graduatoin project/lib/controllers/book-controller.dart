@@ -41,6 +41,11 @@ class FileController extends GetxController {
     getUserFile();
   }
 
+  // Function to generate a unique Firebase-like ID
+  String generateUniqueId() {
+    return Uuid().v4(); // Generates a unique ID
+  }
+
   // Fetch files uploaded by the user
   Future<void> getUserFile() async {
     currentUserFiles.clear(); // Clear the previous files list
@@ -101,9 +106,11 @@ class FileController extends GetxController {
 
   // Create a new file and upload it to Firestore
   void createFile() async {
+    String fileId = generateUniqueId(); // Generate unique ID for the file
+
     isPostUploading.value = true;
     var newfile = FileModel(
-      id: '$index',
+      id: fileId,
       title: title.text,
       description: description.text,
       coverUrl: imageUrl.value,
