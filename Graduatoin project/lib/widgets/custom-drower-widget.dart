@@ -6,9 +6,12 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../Screens/AddBook/AddNewBook.dart';
-import '../Screens/NotesScreen.dart';
+import '../Screens/Notes/NoteScreen.dart';
+import '../Screens/ToDoList/AddTodo.dart';
+import '../Screens/ToDoList/add_task.dart';
 import '../Screens/auth-ui/welcom-scren.dart';
 import '../Screens/main_screen.dart';
+import '../Screens/setting/setting.dart';
 import '../controllers/book-controller.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -126,8 +129,40 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 trailing: Icon(Icons.arrow_forward),
                 onTap: () {
                   Get.back();
-                  Get.to(() => Notesscreen());
+                  Get.to(() => NoteScreen());
                 },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+              ),
+              child: ListTile(
+                titleAlignment: ListTileTitleAlignment.center,
+                title: Text(
+                  "To Do List",
+                ),
+                leading: Icon(Icons.format_list_bulleted_add),
+                trailing: Icon(Icons.arrow_forward),
+                onTap: () {
+                  Get.back();
+                  Get.to(() => AddTodoScreen());
+                  // Get.to(() => AddTask());
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+              ),
+              child: ListTile(
+                onTap: () {
+                  Get.to(() => SettingPage());
+                },
+                titleAlignment: ListTileTitleAlignment.center,
+                title: Text("settings"),
+                leading: Icon(Icons.settings),
+                trailing: Icon(Icons.arrow_forward),
               ),
             ),
             Padding(
