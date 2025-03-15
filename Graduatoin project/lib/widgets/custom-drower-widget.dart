@@ -9,6 +9,8 @@ import '../Screens/AddBook/AddNewBook.dart';
 import '../Screens/Notes/NoteScreen.dart';
 import '../Screens/ToDoList/AddTodo.dart';
 import '../Screens/ToDoList/add_task.dart';
+
+import '../Screens/Translation/translationScreen.dart';
 import '../Screens/auth-ui/welcom-scren.dart';
 import '../Screens/main_screen.dart';
 import '../Screens/setting/setting.dart';
@@ -112,6 +114,22 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 title: Text("Add file"),
                 leading: Icon(
                   Icons.file_copy,
+                ),
+                trailing: Icon(Icons.arrow_forward),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+              ),
+              child: ListTile(
+                onTap: () {
+                  Get.to(() => TranslationScreen());
+                },
+                titleAlignment: ListTileTitleAlignment.center,
+                title: Text("Translation"),
+                leading: Icon(
+                  Icons.translate_sharp,
                 ),
                 trailing: Icon(Icons.arrow_forward),
               ),
