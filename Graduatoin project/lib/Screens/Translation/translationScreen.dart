@@ -1,6 +1,9 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:gp_2/utils/App_constant.dart';
 import 'package:translator/translator.dart';
+
+import '../../utils/App_constant.dart';
 
 class TranslationScreen extends StatefulWidget {
   const TranslationScreen({super.key});
@@ -30,6 +33,14 @@ class _TranslationScreenState extends State<TranslationScreen> {
         from: fromLanguage, to: toLanguage);
     setState(() {
       translatedText = translation.text;
+    });
+  }
+
+  void swapLanguages() {
+    setState(() {
+      String temp = fromLanguage;
+      fromLanguage = toLanguage;
+      toLanguage = temp;
     });
   }
 
@@ -67,7 +78,14 @@ class _TranslationScreenState extends State<TranslationScreen> {
                     });
                   },
                 ),
-                const Icon(Icons.swap_horiz, size: 30, color: Colors.grey),
+                GestureDetector(
+                  onTap: swapLanguages,
+                  child: const Icon(
+                    Icons.swap_horiz,
+                    size: 30,
+                    color: AppConstant.appMainColor,
+                  ),
+                ),
                 DropdownButton<String>(
                   value: toLanguage,
                   items: languages.entries.map((entry) {
@@ -89,6 +107,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
               style: const TextStyle(fontSize: 18),
               decoration: InputDecoration(
                 hintText: "Enter text",
+                hintStyle: TextStyle(color: Colors.grey.shade500),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),

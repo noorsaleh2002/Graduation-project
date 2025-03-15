@@ -25,13 +25,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      /* theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),*/
-      home: const SplashScreen(),
-      theme: Provider.of<Themeprovider>(context).themeData,
+    return Consumer<Themeprovider>(
+      builder: (context, themeProvider, child) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false, // Hides the debug banner
+          title: 'Flutter Demo',
+          theme: themeProvider.themeData,
+          home: const SplashScreen(),
+        );
+      },
     );
   }
 }

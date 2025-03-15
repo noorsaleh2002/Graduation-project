@@ -33,6 +33,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
       return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(color: AppConstant.appTextColor),
           backgroundColor: AppConstant.appMainColor,
           centerTitle: true,
           title: Text(
@@ -47,7 +48,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ? Text("Welcome to my app")
                   : Column(
                       children: [
-                        Lottie.asset('assets/images/start.json'),
+                        Lottie.asset('assests/images/start.json'),
                       ],
                     ),
               SizedBox(
@@ -209,7 +210,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     style: TextStyle(color: AppConstant.appMainColor),
                   ),
                   GestureDetector(
-                    onTap: () => Get.offAll(() => SignUpScreen()),
+                    onTap: () => Get.to(() => SignUpScreen()),
                     child: Text(
                       "Sign Up",
                       style: TextStyle(

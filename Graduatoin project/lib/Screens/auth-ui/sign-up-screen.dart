@@ -4,10 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:gp_2/controllers/sign-up-controller.dart';
 import 'package:gp_2/utils/App_constant.dart';
-import 'package:lottie/lottie.dart';
 
 import 'sign-in-screen.dart';
 
@@ -31,6 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
       return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(color: AppConstant.appTextColor),
           backgroundColor: AppConstant.appMainColor,
           centerTitle: true,
           title: Text(
@@ -217,7 +216,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             );
 
                             FirebaseAuth.instance.signOut();
-                            Get.offAll(() => SignInScreen());
+                            Get.to(() => SignInScreen());
                           }
                         }
                       },
@@ -235,7 +234,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           color: AppConstant.appMainColor,
                         )),
                     GestureDetector(
-                      onTap: () => Get.offAll(SignInScreen()),
+                      onTap: () => Get.to(SignInScreen()),
                       child: Text("Sign In",
                           style: TextStyle(
                               color: AppConstant.appMainColor,

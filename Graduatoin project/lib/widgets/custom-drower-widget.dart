@@ -8,8 +8,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../Screens/AddBook/AddNewBook.dart';
 import '../Screens/Notes/NoteScreen.dart';
 import '../Screens/ToDoList/AddTodo.dart';
-import '../Screens/ToDoList/add_task.dart';
-
 import '../Screens/Translation/translationScreen.dart';
 import '../Screens/auth-ui/welcom-scren.dart';
 import '../Screens/main_screen.dart';
@@ -70,6 +68,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 leading: Icon(Icons.home),
                 trailing: Icon(Icons.arrow_forward),
                 onTap: () {
+                  Get.back();
                   Get.to(() => MainScreen());
                 },
               ),
@@ -80,34 +79,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
               child: ListTile(
                 onTap: () {
-                  // Get.to(() => AllUsersScreen());
-                },
-                titleAlignment: ListTileTitleAlignment.center,
-                title: Text("Summarize"),
-                leading: Icon(Icons.summarize),
-                trailing: Icon(Icons.arrow_forward),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-              ),
-              child: ListTile(
-                onTap: () {
-                  // Get.to(() => AllCategoriesAScreen());
-                },
-                titleAlignment: ListTileTitleAlignment.center,
-                title: Text("ChatBot"),
-                leading: Icon(Icons.chat),
-                trailing: Icon(Icons.arrow_forward),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-              ),
-              child: ListTile(
-                onTap: () {
+                  Get.back();
                   Get.to(() => AddFilePage());
                 },
                 titleAlignment: ListTileTitleAlignment.center,
@@ -124,13 +96,42 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
               child: ListTile(
                 onTap: () {
+                  Get.back();
+                  // Get.to(() => AllUsersScreen());
+                },
+                titleAlignment: ListTileTitleAlignment.center,
+                title: Text("Summarize"),
+                leading: Icon(Icons.summarize),
+                trailing: Icon(Icons.arrow_forward),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+              ),
+              child: ListTile(
+                onTap: () {
+                  Get.back();
                   Get.to(() => TranslationScreen());
                 },
                 titleAlignment: ListTileTitleAlignment.center,
                 title: Text("Translation"),
-                leading: Icon(
-                  Icons.translate_sharp,
-                ),
+                leading: Icon(Icons.translate),
+                trailing: Icon(Icons.arrow_forward),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+              ),
+              child: ListTile(
+                onTap: () {
+                  Get.back();
+                  // Get.to(() => AllCategoriesAScreen());
+                },
+                titleAlignment: ListTileTitleAlignment.center,
+                title: Text("ChatBot"),
+                leading: Icon(Icons.chat),
                 trailing: Icon(Icons.arrow_forward),
               ),
             ),
@@ -165,7 +166,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 onTap: () {
                   Get.back();
                   Get.to(() => AddTodoScreen());
-                  // Get.to(() => AddTask());
                 },
               ),
             ),
@@ -175,6 +175,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
               child: ListTile(
                 onTap: () {
+                  Get.back();
                   Get.to(() => SettingPage());
                 },
                 titleAlignment: ListTileTitleAlignment.center,

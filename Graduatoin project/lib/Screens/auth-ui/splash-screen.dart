@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.offAll(() => MainScreen());
       }
     } else {
-      Get.to(() => WelcomeScreen());
+      Get.offAll(() => WelcomeScreen());
     }
   }
 

@@ -1,6 +1,7 @@
+// ignore_for_file: file_names, must_be_immutable, camel_case_types
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../../widgets/taskWidget.dart';
 import 'firestorTodo.dart';
 
@@ -19,6 +20,7 @@ class Stream_task extends StatelessWidget {
           final taskslist = FireStore_Datasource().getTasks(snapshot);
           return ListView.builder(
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final task = taskslist[index];
               return Dismissible(
@@ -26,7 +28,7 @@ class Stream_task extends StatelessWidget {
                   onDismissed: (direction) {
                     FireStore_Datasource().delete_task(task.id);
                   },
-                  child: Task_Widget(task));
+                  child: TaskWidget(task));
             },
             itemCount: taskslist.length,
           );
