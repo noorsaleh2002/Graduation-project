@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../GeminiModelSummarizer/summaryScreen.dart';
 import '../Screens/AddBook/AddNewBook.dart';
 import '../Screens/Notes/NoteScreen.dart';
 import '../Screens/ToDoList/AddTodo.dart';
@@ -97,7 +98,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               child: ListTile(
                 onTap: () {
                   Get.back();
-                  // Get.to(() => AllUsersScreen());
+                  Get.to(() => Summaryscreen());
                 },
                 titleAlignment: ListTileTitleAlignment.center,
                 title: Text("Summarize"),
