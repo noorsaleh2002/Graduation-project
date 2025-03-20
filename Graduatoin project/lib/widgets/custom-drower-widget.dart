@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../ChatBot/chatbotScreen.dart';
 import '../GeminiModelSummarizer/summaryScreen.dart';
 import '../Screens/AddBook/AddNewBook.dart';
 import '../Screens/Notes/NoteScreen.dart';
@@ -128,7 +129,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               child: ListTile(
                 onTap: () {
                   Get.back();
-                  // Get.to(() => AllCategoriesAScreen());
+                  Get.to(() => Chatbotscreen());
                 },
                 titleAlignment: ListTileTitleAlignment.center,
                 title: Text("ChatBot"),
