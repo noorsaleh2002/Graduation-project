@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, file_names
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../models/file-medel.dart';
 import '../../utils/App_constant.dart';
@@ -22,7 +23,7 @@ class FileDetails extends StatelessWidget {
     String audioLen = file.audioLen?.toString() ?? "Unknown";
     String fileId = file.id?.toString() ?? "Unknown";
     String fileUrl = file.fileurl ?? "";
-
+    User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -42,6 +43,7 @@ class FileDetails extends StatelessWidget {
                       audioLen: audioLen,
                       fileId: fileId,
                       fileurl: fileUrl,
+                      userId: user!.uid,
                     ),
                   ),
                 ],

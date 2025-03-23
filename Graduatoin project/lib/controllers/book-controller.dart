@@ -185,7 +185,7 @@ class FileController extends GetxController {
       return await ref.getDownloadURL();
     } catch (e) {
       print('Error fetching default cover image: $e');
-      return "https://firebasestorage.googleapis.com/v0/b/graduation-project-67076.firebasestorage.app/o/Images%2Fcover.jpeg?alt=media&token=9503757b-fe38-4430-a373-0a022254e8f4"; // Fallback if fetching fails
+      return ""; // this image from assests/image/cover.jpeg
     }
   }
 

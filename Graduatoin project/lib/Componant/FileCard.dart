@@ -31,23 +31,27 @@ class FileCard extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: AppConstant.appMainColor,
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(2, 2))
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                        // network
-                        coverUrl,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: AppConstant.appMainColor,
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(2, 2))
+                  ],
+                ),
+                child: coverUrl.isEmpty
+                    ? Image.asset(
+                        'assests/images/cover.jpeg', // Default image
                         width: 100,
-                        fit: BoxFit.cover),
-                  )),
+                        fit: BoxFit.cover,
+                      )
+                    : Image.network(
+                        coverUrl, // Uploaded image
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
+              ),
               SizedBox(height: 10),
               Expanded(
                   child: Column(
