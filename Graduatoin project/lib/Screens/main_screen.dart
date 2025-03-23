@@ -80,12 +80,15 @@ class MainScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Time to read files and enhance your knowledge",
+                    "Time to enhance your knowledge",
                     style: TextStyle(
                         color: AppConstant.appTextColor, fontSize: 11),
                   ),
                   SizedBox(height: 20),
-                  Search(),
+                  Search(
+                    onSearch: fileController.searchFiles,
+                    onCancel: fileController.clearSearch,
+                  ),
                 ],
               ),
             ),
@@ -106,7 +109,27 @@ class MainScreen extends StatelessWidget {
                   SizedBox(height: 10),
                   // Display User-Uploaded Files
                   Obx(() {
-                    if (fileController.currentUserFiles.isEmpty) {
+                    final filesToShow = fileController.searchResults.isNotEmpty
+                        ? fileController.searchResults
+                        : fileController.currentUserFiles;
+
+                    if (fileController.searchResults.isEmpty &&
+                        fileController.currentUserFiles.isNotEmpty) {
+                      return Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Text(
+                            'No files found with that title.',
+                            style: TextStyle(
+                                color: AppConstant.appMainColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15),
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (filesToShow.isEmpty) {
                       return Center(
                         child: Padding(
                           padding: EdgeInsets.all(20),
@@ -117,13 +140,13 @@ class MainScreen extends StatelessWidget {
                         ),
                       );
                     }
+
                     return ListView.builder(
-                      shrinkWrap: true, // Allow it to fit inside Column
-                      physics:
-                          NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
-                      itemCount: fileController.currentUserFiles.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: filesToShow.length,
                       itemBuilder: (context, index) {
-                        final file = fileController.currentUserFiles[index];
+                        final file = filesToShow[index];
                         return FileCard(
                           title: file.title!,
                           coverUrl: file.coverUrl!,
@@ -131,7 +154,7 @@ class MainScreen extends StatelessWidget {
                         );
                       },
                     );
-                  }),
+                  })
                 ],
               ),
             ),

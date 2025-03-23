@@ -33,7 +33,7 @@ class FileController extends GetxController {
   RxBool isPostUploading = false.obs;
   var fileData = RxList<FileModel>();
   var currentUserFiles = RxList<FileModel>();
-
+  var searchResults = <FileModel>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -49,6 +49,8 @@ class FileController extends GetxController {
   // Fetch files uploaded by the user
   Future<void> getUserFile() async {
     currentUserFiles.clear(); // Clear the previous files list
+    // Display all files by default
+
     try {
       var files = await db
           .collection('userFile')
@@ -59,6 +61,7 @@ class FileController extends GetxController {
       for (var file in files.docs) {
         currentUserFiles.add(FileModel.fromJson(file.data()));
       }
+      searchResults.assignAll(currentUserFiles);
     } catch (e) {
       print("Error fetching user files: $e");
     }
@@ -75,6 +78,33 @@ class FileController extends GetxController {
     } catch (e) {
       print("Error fetching all files: $e");
     }
+  }
+
+// Search files by title
+  void searchFiles(String query) {
+    if (query.isEmpty) {
+      searchResults.clear();
+      searchResults.assignAll(currentUserFiles);
+
+      return;
+    }
+
+    final results = currentUserFiles
+        .where(
+            (file) => file.title!.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    if (results.isEmpty) {
+      searchResults.clear();
+    } else {
+      searchResults.assignAll(results);
+    }
+  }
+
+//clear the search bar
+  void clearSearch() {
+    searchResults.assignAll(currentUserFiles); // Reset to all files
+    update(); // Notify UI to rebuild
   }
 
   // Upload image function
@@ -107,13 +137,18 @@ class FileController extends GetxController {
   // Create a new file and upload it to Firestore
   void createFile() async {
     String fileId = generateUniqueId(); // Generate unique ID for the file
-
     isPostUploading.value = true;
+
+    // Provide a default image URL if no image was uploaded
+    String coverImage = imageUrl.value.isNotEmpty
+        ? imageUrl.value
+        : await getDefaultCoverUrl(); // Function to fetch default image URL
+
     var newfile = FileModel(
       id: fileId,
       title: title.text,
       description: description.text,
-      coverUrl: imageUrl.value,
+      coverUrl: coverImage,
       fileurl: pdfUrl.value,
       pages: int.parse(pages.text),
       language: language.text,
@@ -122,6 +157,7 @@ class FileController extends GetxController {
     await db.collection('File').add(newfile.toJson());
     addFileInUserDb(newfile);
     isPostUploading.value = false;
+
     title.clear();
     description.clear();
     pages.clear();
@@ -129,6 +165,7 @@ class FileController extends GetxController {
     aduioLen.clear();
     imageUrl.value = '';
     pdfUrl.value = '';
+
     Get.snackbar(
       'Success',
       "File added Successfully!",
@@ -136,8 +173,20 @@ class FileController extends GetxController {
       backgroundColor: AppConstant.appMainColor,
       colorText: AppConstant.appTextColor,
     );
+
     getAllFiles();
     getUserFile();
+  }
+
+// Function to get default cover URL
+  Future<String> getDefaultCoverUrl() async {
+    try {
+      var ref = FirebaseStorage.instance.ref('cover.jpeg');
+      return await ref.getDownloadURL();
+    } catch (e) {
+      print('Error fetching default cover image: $e');
+      return "https://firebasestorage.googleapis.com/v0/b/graduation-project-67076.firebasestorage.app/o/Images%2Fcover.jpeg?alt=media&token=9503757b-fe38-4430-a373-0a022254e8f4"; // Fallback if fetching fails
+    }
   }
 
   // Add file to the user's collection in Firestore
