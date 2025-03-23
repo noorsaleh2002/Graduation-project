@@ -181,7 +181,7 @@ class FileController extends GetxController {
 // Function to get default cover URL
   Future<String> getDefaultCoverUrl() async {
     try {
-      var ref = FirebaseStorage.instance.ref('cover.jpeg');
+      var ref = FirebaseStorage.instance.ref('Images/cover.jpeg');
       return await ref.getDownloadURL();
     } catch (e) {
       print('Error fetching default cover image: $e');
