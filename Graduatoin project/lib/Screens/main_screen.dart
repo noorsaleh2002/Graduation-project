@@ -9,6 +9,7 @@ import '../controllers/book-controller.dart';
 import '../utils/App_constant.dart';
 import '../widgets/SearchTextFild.dart';
 import '../widgets/custom-drower-widget.dart';
+import 'AddBook/AddNewBook.dart';
 import 'BookDetails/BookDetail.dart';
 import 'auth-ui/welcom-scren.dart';
 
@@ -160,6 +161,13 @@ class MainScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.to(() => AddFilePage()); // Navigate to the AddFileScreen
+        },
+        backgroundColor: AppConstant.appMainColor,
+        child: Icon(Icons.add, color: AppConstant.appTextColor),
       ),
     );
   }
