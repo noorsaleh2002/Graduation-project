@@ -1,9 +1,12 @@
+// ignore_for_file: file_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Import GetX
+// show AppConstant;
 import '../../Componant/BackButton.dart';
-import '../../utils/App_constant.dart';
+import '../../utils/App_constant.dart' show AppConstant;
 
 class FileDetailHeader extends StatelessWidget {
   final String coverUrl;
@@ -126,7 +129,7 @@ class FileDetailHeader extends StatelessWidget {
         'Success',
         'File deleted successfully',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
+        backgroundColor: AppConstant.appMainColor,
         colorText: Colors.white,
       );
       print('File deletion process completed successfully.');
@@ -140,7 +143,7 @@ class FileDetailHeader extends StatelessWidget {
         'Error',
         'Failed to delete file: $e',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
+        backgroundColor: AppConstant.appMainColor,
         colorText: Colors.white,
       );
     }
@@ -172,10 +175,15 @@ class FileDetailHeader extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                coverUrl,
-                width: 170,
-              ),
+              child: (coverUrl != '')
+                  ? Image.network(
+                      coverUrl,
+                      width: 170,
+                    )
+                  : Image.asset(
+                      'assests/images/cover.jpeg',
+                      width: 170,
+                    ),
             ),
           ],
         ),

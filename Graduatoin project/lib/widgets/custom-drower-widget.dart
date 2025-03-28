@@ -15,6 +15,7 @@ import '../Screens/auth-ui/welcom-scren.dart';
 import '../Screens/main_screen.dart';
 import '../Screens/setting/setting.dart';
 import '../controllers/book-controller.dart';
+import '../controllers/google-sign-in-controller.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -25,6 +26,8 @@ class DrawerWidget extends StatefulWidget {
 
 class _DrawerWidgetState extends State<DrawerWidget> {
   FileController fileController = Get.put(FileController());
+  GoogleSignInController googleSignInController =
+      Get.put(GoogleSignInController());
   @override
   Widget build(BuildContext context) {
     return Padding(

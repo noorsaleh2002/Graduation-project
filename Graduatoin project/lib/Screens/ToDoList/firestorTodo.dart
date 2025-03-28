@@ -1,9 +1,12 @@
+// ignore_for_file: non_constant_identifier_names, avoid_print, camel_case_types, file_names, unused_import
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:gp_2/models/TasksModel.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../models/TasksModel.dart';
 
 class FireStore_Datasource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
