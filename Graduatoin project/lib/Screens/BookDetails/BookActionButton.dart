@@ -9,8 +9,12 @@ import '../BookPage/BookPage.dart';
 class Fileactionbutton extends StatelessWidget {
   final String fileUrl;
   final String title;
+  final String fileid;
   const Fileactionbutton(
-      {super.key, required this.fileUrl, required this.title});
+      {super.key,
+      required this.fileUrl,
+      required this.title,
+      required this.fileid});
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +32,7 @@ class Fileactionbutton extends StatelessWidget {
               Get.to(FilePage(
                 fileUrl: fileUrl,
                 title: title,
+                fileid: fileid,
               ));
             },
             child: Row(

@@ -68,6 +68,7 @@ class FileDetails extends StatelessWidget {
                     Fileactionbutton(
                       fileUrl: fileUrl,
                       title: title,
+                      fileid: fileId,
                     )
                   else
                     Text("No file URL available",
