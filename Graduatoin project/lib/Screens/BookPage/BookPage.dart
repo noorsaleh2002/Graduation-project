@@ -9,7 +9,8 @@ import '../../utils/App_constant.dart';
 
 class FilePage extends StatefulWidget {
   final String fileUrl;
-  const FilePage({super.key, required this.fileUrl});
+  final String title;
+  const FilePage({super.key, required this.fileUrl, required this.title});
 
   @override
   _FilePageState createState() => _FilePageState();
@@ -24,6 +25,16 @@ class _FilePageState extends State<FilePage> {
   void initState() {
     super.initState();
     _pdfViewerController = PdfViewerController();
+  }
+
+  void _zoomIn() {
+    _pdfViewerController.zoomLevel = _pdfViewerController.zoomLevel + 0.25;
+  }
+
+  void _zoomOut() {
+    if (_pdfViewerController.zoomLevel > 1.0) {
+      _pdfViewerController.zoomLevel = _pdfViewerController.zoomLevel - 0.25;
+    }
   }
 
   @override
@@ -51,7 +62,7 @@ class _FilePageState extends State<FilePage> {
                 },
               )
             : Text(
-                'File Title',
+                widget.title,
                 style: TextStyle(
                   color: AppConstant.appTextColor,
                 ),
@@ -97,6 +108,18 @@ class _FilePageState extends State<FilePage> {
                     Icon(Icons.arrow_downward, color: AppConstant.appMainColor),
                 onPressed: () {
                   _pdfViewerController.nextPage();
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.zoom_in, color: AppConstant.appMainColor),
+                onPressed: () {
+                  _zoomIn();
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.zoom_out, color: AppConstant.appMainColor),
+                onPressed: () {
+                  _zoomOut();
                 },
               ),
             ],

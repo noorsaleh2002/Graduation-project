@@ -2,11 +2,11 @@
 
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,7 +19,6 @@ class FileController extends GetxController {
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController pages = TextEditingController();
-  TextEditingController aduioLen = TextEditingController();
   TextEditingController language = TextEditingController();
   ImagePicker imagePicker = ImagePicker();
   final storage = FirebaseStorage.instance;
@@ -108,13 +107,52 @@ class FileController extends GetxController {
   }
 
   // Upload image function
-  void pickImage() async {
+  /*void pickImage() async {
     isImageUploading.value = true;
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.camera); // image.gallery
     if (image != null) {
       uploadImageToFirebase(File(image.path));
     }
+  }*/
+
+  void pickImage(BuildContext context) async {
+    isImageUploading.value = true;
+
+    final ImageSource? source = await showDialog<ImageSource>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Choose Image Source?',
+            style: TextStyle(color: AppConstant.appMainColor, fontSize: 18),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Camera'),
+              onPressed: () {
+                Navigator.pop(context, ImageSource.camera);
+              },
+            ),
+            TextButton(
+              child: Text('Gallery'),
+              onPressed: () {
+                Navigator.pop(context, ImageSource.gallery);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (source != null) {
+      final XFile? image = await imagePicker.pickImage(source: source);
+      if (image != null) {
+        uploadImageToFirebase(File(image.path));
+      }
+    }
+
+    isImageUploading.value = false;
   }
 
   // Upload image to Firebase Storage
@@ -162,7 +200,6 @@ class FileController extends GetxController {
     description.clear();
     pages.clear();
     language.clear();
-    aduioLen.clear();
     imageUrl.value = '';
     pdfUrl.value = '';
 

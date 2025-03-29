@@ -1,12 +1,12 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, unused_local_variable
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, unused_field, unused_local_variable
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
-import 'package:gp_2/controllers/sign-up-controller.dart';
-import 'package:gp_2/utils/App_constant.dart';
 
+import '../../controllers/sign-up-controller.dart';
+import '../../utils/App_constant.dart';
 import 'sign-in-screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final SignUpController signUpController = Get.put(SignUpController());
+  final SignUpController _signUpController = Get.put(SignUpController());
   TextEditingController username = TextEditingController();
   TextEditingController userEmail = TextEditingController();
   TextEditingController userPhone = TextEditingController();
@@ -29,7 +29,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
       return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: AppConstant.appTextColor),
           backgroundColor: AppConstant.appMainColor,
           centerTitle: true,
           title: Text(
@@ -38,22 +37,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               color: AppConstant.appTextColor,
             ),
           ),
+          iconTheme: IconThemeData(color: AppConstant.appTextColor),
         ),
         body: SingleChildScrollView(
-          //physics: BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           child: Container(
             child: Column(
               children: [
-                SizedBox(
-                  height: Get.height / 20,
-                ),
-                Container(
-                    alignment: Alignment.center,
-                    child: Text("Welcom to my app",
-                        style: TextStyle(
-                            color: AppConstant.appMainColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0))),
                 SizedBox(
                   height: Get.height / 20,
                 ),
@@ -68,11 +58,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             hintText: "Email",
-                            prefixIcon: Icon(Icons.email),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            prefixIcon: Icon(
+                              Icons.email,
+                              color: AppConstant.appMainColor,
+                            ),
                             contentPadding:
                                 EdgeInsets.only(top: 2.0, left: 8.0),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
+                                borderRadius: BorderRadius.circular(10.0)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(
+                                    color: AppConstant.appMainColor,
+                                    width: 1.5)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(
+                                    color: AppConstant.appMainColor,
+                                    width: 2.0))),
                       ),
                     )),
                 Container(
@@ -85,12 +89,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         cursorColor: AppConstant.appMainColor,
                         keyboardType: TextInputType.name,
                         decoration: InputDecoration(
-                            hintText: "User Name",
-                            prefixIcon: Icon(Icons.person),
+                            hintText: "UserName",
+                            hintStyle: TextStyle(color: Colors.grey),
+                            prefixIcon: Icon(
+                              Icons.person,
+                              color: AppConstant.appMainColor,
+                            ),
                             contentPadding:
                                 EdgeInsets.only(top: 2.0, left: 8.0),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
+                                borderRadius: BorderRadius.circular(10.0)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(
+                                    color: AppConstant.appMainColor,
+                                    width: 1.5)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(
+                                    color: AppConstant.appMainColor,
+                                    width: 2.0))),
                       ),
                     )),
                 Container(
@@ -104,29 +122,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                             hintText: "Phone",
-                            prefixIcon: Icon(Icons.phone),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            prefixIcon: Icon(
+                              Icons.phone,
+                              color: AppConstant.appMainColor,
+                            ),
                             contentPadding:
                                 EdgeInsets.only(top: 2.0, left: 8.0),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
-                      ),
-                    )),
-                Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5.0),
-                    width: Get.width,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: userCity,
-                        cursorColor: AppConstant.appMainColor,
-                        keyboardType: TextInputType.streetAddress,
-                        decoration: InputDecoration(
-                            hintText: "City",
-                            prefixIcon: Icon(Icons.location_pin),
-                            contentPadding:
-                                EdgeInsets.only(top: 2.0, left: 8.0),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
+                                borderRadius: BorderRadius.circular(10.0)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(
+                                    color: AppConstant.appMainColor,
+                                    width: 1.5)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(
+                                    color: AppConstant.appMainColor,
+                                    width: 2.0))),
                       ),
                     )),
                 Container(
@@ -138,27 +152,79 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           () => TextFormField(
                             controller: userPassword,
                             obscureText:
-                                signUpController.isPasswordVisible.value,
+                                _signUpController.isPasswordVisible.value,
                             cursorColor: AppConstant.appMainColor,
                             keyboardType: TextInputType.visiblePassword,
                             decoration: InputDecoration(
                                 hintText: "Password",
-                                prefixIcon: Icon(Icons.password),
+                                hintStyle: TextStyle(color: Colors.grey),
+                                prefixIcon: Icon(
+                                  Icons.password,
+                                  color: AppConstant.appMainColor,
+                                ),
                                 suffixIcon: GestureDetector(
                                     onTap: () {
-                                      signUpController.isPasswordVisible
+                                      _signUpController.isPasswordVisible
                                           .toggle();
                                     },
-                                    child:
-                                        signUpController.isPasswordVisible.value
-                                            ? Icon(Icons.visibility_off)
-                                            : Icon(Icons.visibility)),
+                                    child: _signUpController
+                                            .isPasswordVisible.value
+                                        ? Icon(
+                                            Icons.visibility_off,
+                                            color: AppConstant.appMainColor,
+                                          )
+                                        : Icon(
+                                            Icons.visibility,
+                                            color: AppConstant.appMainColor,
+                                          )),
                                 contentPadding:
                                     EdgeInsets.only(top: 2.0, left: 8.0),
                                 border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0))),
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                        color: AppConstant.appMainColor,
+                                        width: 1.5)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                        color: AppConstant.appMainColor,
+                                        width: 2.0))),
                           ),
                         ))),
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: 5.0),
+                    width: Get.width,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: userCity,
+                        cursorColor: AppConstant.appMainColor,
+                        keyboardType: TextInputType.streetAddress,
+                        decoration: InputDecoration(
+                            hintText: "City",
+                            hintStyle: TextStyle(color: Colors.grey),
+                            prefixIcon: Icon(
+                              Icons.location_pin,
+                              color: AppConstant.appMainColor,
+                            ),
+                            contentPadding:
+                                EdgeInsets.only(top: 2.0, left: 8.0),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(
+                                    color: AppConstant.appMainColor,
+                                    width: 1.5)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(
+                                    color: AppConstant.appMainColor,
+                                    width: 2.0))),
+                      ),
+                    )),
                 SizedBox(
                   height: Get.height / 20,
                 ),
@@ -178,9 +244,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onPressed: () async {
                         String name = username.text.trim();
                         String email = userEmail.text.trim();
-                        String phone = userPhone.text.trim();
-                        String city = userCity.text.trim();
                         String password = userPassword.text.trim();
+                        String city = userCity.text.trim();
+                        String phone = userPhone.text.trim();
                         String userDeviceToken = '';
 
                         if (name.isEmpty ||
@@ -197,7 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           );
                         } else {
                           UserCredential? userCredential =
-                              await signUpController.signUpMethod(
+                              await _signUpController.signUpMethod(
                             name,
                             email,
                             phone,
@@ -205,7 +271,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             password,
                             userDeviceToken,
                           );
-
                           if (userCredential != null) {
                             Get.snackbar(
                               "Verification email sent.",
@@ -224,21 +289,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: Get.height / 18,
+                  height: Get.height / 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Already have an account?",
+                    Text(
+                      "Already have an account?",
+                      style: TextStyle(
+                        color: AppConstant.appMainColor,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Get.to(() => SignInScreen()),
+                      child: Text(
+                        "Sign In",
                         style: TextStyle(
                           color: AppConstant.appMainColor,
-                        )),
-                    GestureDetector(
-                      onTap: () => Get.to(SignInScreen()),
-                      child: Text("Sign In",
-                          style: TextStyle(
-                              color: AppConstant.appMainColor,
-                              fontWeight: FontWeight.bold)),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 )

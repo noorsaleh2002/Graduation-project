@@ -2,9 +2,10 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gp_2/Screens/BookDetails/BookActionButton.dart';
+
 import '../../models/file-medel.dart';
 import '../../utils/App_constant.dart';
-import 'BookActionButton.dart';
 import 'HeaderWidget.dart';
 
 class FileDetails extends StatelessWidget {
@@ -20,7 +21,6 @@ class FileDetails extends StatelessWidget {
     String description = file.description ?? "No description available";
     String pages = file.pages?.toString() ?? "Unknown";
     String language = file.language ?? "Unknown";
-    String audioLen = file.audioLen?.toString() ?? "Unknown";
     String fileId = file.id?.toString() ?? "Unknown";
     String fileUrl = file.fileurl ?? "";
     User? user = FirebaseAuth.instance.currentUser;
@@ -40,7 +40,6 @@ class FileDetails extends StatelessWidget {
                       description: description,
                       pages: pages,
                       language: language,
-                      audioLen: audioLen,
                       fileId: fileId,
                       fileurl: fileUrl,
                       userId: user!.uid,
@@ -61,11 +60,15 @@ class FileDetails extends StatelessWidget {
                   SizedBox(height: 10),
                   Text(
                     description,
-                    style: TextStyle(color: Colors.black, fontSize: 20),
+                    style: TextStyle(
+                        color: AppConstant.appMainColor, fontSize: 20),
                   ),
                   SizedBox(height: 160),
                   if (fileUrl.isNotEmpty)
-                    Fileactionbutton(fileUrl: fileUrl)
+                    Fileactionbutton(
+                      fileUrl: fileUrl,
+                      title: title,
+                    )
                   else
                     Text("No file URL available",
                         style: TextStyle(color: Colors.red, fontSize: 18)),

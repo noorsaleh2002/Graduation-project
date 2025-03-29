@@ -1,24 +1,27 @@
 // ignore: file_names
+// ignore_for_file: avoid_unnecessary_containers, unused_field
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gp_2/Screens/auth-ui/sign-in-screen.dart';
-import 'package:gp_2/utils/App_constant.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../controllers/google-sign-in-controller.dart';
+import '../../utils/App_constant.dart';
+import 'sign-in-screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   WelcomeScreen({super.key});
+
   final GoogleSignInController _googleSignInController =
       Get.put(GoogleSignInController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: AppConstant.appTextColor),
         backgroundColor: AppConstant.appMainColor,
         title: Text(
-          "Welcome to my app",
+          "Welcome to study friend app",
           style: TextStyle(
             color: AppConstant.appTextColor,
           ),
@@ -36,8 +39,11 @@ class WelcomeScreen extends StatelessWidget {
             Container(
                 margin: EdgeInsets.only(top: 20.0),
                 child: Text(
-                  "Wishing you a joyful study session! ",
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  "Happy Studing ",
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstant.appTextColor2),
                 )),
             SizedBox(
               height: Get.height / 12,
@@ -78,7 +84,10 @@ class WelcomeScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 child: TextButton.icon(
-                  icon: Icon(Icons.email),
+                  icon: Icon(
+                    Icons.email,
+                    color: Colors.white,
+                  ),
                   label: Text(
                     "Sign in with Email",
                     style: TextStyle(color: AppConstant.appTextColor),

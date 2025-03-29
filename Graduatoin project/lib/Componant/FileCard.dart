@@ -60,7 +60,7 @@ class FileCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: Text(
-                      'Title: $title ',
+                      '         $title ',
                       style: TextStyle(
                         color: AppConstant.appMainColor,
                       ),

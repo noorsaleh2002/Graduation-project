@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, must_be_immutable, unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +9,6 @@ import '../../Componant/MyTextFormField.dart';
 import '../../controllers/book-controller.dart';
 import '../../controllers/pdf-controller.dart';
 import '../../utils/App_constant.dart';
-import '../../widgets/custom-drower-widget.dart';
 
 class AddFilePage extends StatelessWidget {
   FileController fileController = Get.put(FileController());
@@ -61,7 +60,7 @@ class AddFilePage extends StatelessWidget {
                       ),
                       InkWell(
                           onTap: () {
-                            fileController.pickImage();
+                            fileController.pickImage(context);
                           },
                           child: Obx(
                             () => Container(
@@ -216,13 +215,6 @@ class AddFilePage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  MyTextFormField(
-                      hintText: "Audio Len",
-                      icon: Icons.audiotrack,
-                      controller: fileController.aduioLen),
-                  SizedBox(
-                    height: 20,
-                  ),
                   Row(
                     children: [
                       Expanded(
@@ -233,7 +225,6 @@ class AddFilePage extends StatelessWidget {
                             fileController.description.clear();
                             fileController.pages.clear();
                             fileController.language.clear();
-                            fileController.aduioLen.clear();
                             fileController.isPostUploading.value = false;
                             // Reset image and PDF selections
                             fileController.imageUrl.value = '';

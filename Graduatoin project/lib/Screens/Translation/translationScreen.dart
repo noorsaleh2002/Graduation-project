@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:translator/translator.dart';
 
 import '../../utils/App_constant.dart';
@@ -14,7 +15,7 @@ class TranslationScreen extends StatefulWidget {
 
 class _TranslationScreenState extends State<TranslationScreen> {
   final translator = GoogleTranslator();
-  String translatedText = 'Translation';
+  String translatedText = '';
   String inputText = '';
   String fromLanguage = 'en';
   String toLanguage = 'ar';
@@ -28,12 +29,63 @@ class _TranslationScreenState extends State<TranslationScreen> {
     'Chinese': 'zh',
   };
 
-  void translateText() async {
-    final translation = await translator.translate(inputText,
-        from: fromLanguage, to: toLanguage);
+  /*void translateText() async {
+    final translation = await translator.translate(inputText, from: fromLanguage, to: toLanguage);
     setState(() {
       translatedText = translation.text;
     });
+  }*/
+
+  void translateText() async {
+    if (inputText.trim().isEmpty) {
+      setState(() {
+        translatedText = ''; // Clear translated text if input is empty
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter text to translate',
+              style: TextStyle(color: Colors.white)),
+          backgroundColor: AppConstant.appMainColor,
+        ),
+      );
+      return;
+    }
+
+    final translation = await translator.translate(inputText,
+        from: fromLanguage, to: toLanguage);
+
+    setState(() {
+      translatedText = translation.text;
+    });
+  }
+
+  void copyToClipboard() {
+    Clipboard.setData(ClipboardData(text: translatedText));
+    if (translatedText.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Nothing to copy!',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: AppConstant.appMainColor, // Error color
+        ),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('the translation has been copied ',
+            style: TextStyle(color: Colors.white)),
+        backgroundColor: AppConstant.appMainColor, // Success color
+        behavior: SnackBarBehavior.floating, // Optional for better visibility
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10), // Rounded corners
+        ),
+      ),
+    );
   }
 
   void swapLanguages() {
@@ -114,6 +166,10 @@ class _TranslationScreenState extends State<TranslationScreen> {
               onChanged: (text) {
                 setState(() {
                   inputText = text;
+                  if (text.trim().isEmpty) {
+                    translatedText =
+                        ''; // Clear translation result when input is empty
+                  }
                 });
               },
             ),
@@ -134,12 +190,27 @@ class _TranslationScreenState extends State<TranslationScreen> {
                 color: Colors.purple.shade50,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Text(
-                translatedText,
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    translatedText,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: copyToClipboard,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppConstant.appMainColor,
+                    ),
+                    child: const Text("Copy",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ],
               ),
             ),
           ],

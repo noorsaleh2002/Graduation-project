@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Import GetX
-// show AppConstant;
+import 'package:gp_2/utils/App_constant.dart' show AppConstant;
+//import 'package:zfffft/utils/app-constant.dart' show AppConstant;
 import '../../Componant/BackButton.dart';
-import '../../utils/App_constant.dart' show AppConstant;
 
 class FileDetailHeader extends StatelessWidget {
   final String coverUrl;
@@ -14,7 +14,6 @@ class FileDetailHeader extends StatelessWidget {
   final String description;
   final String pages;
   final String language;
-  final String audioLen;
   final String fileId; // File document ID in Firestore
   final String fileurl;
   final String userId;
@@ -25,7 +24,6 @@ class FileDetailHeader extends StatelessWidget {
     required this.description,
     required this.pages,
     required this.language,
-    required this.audioLen,
     required this.fileId,
     required this.fileurl,
     required this.userId,
@@ -224,26 +222,6 @@ class FileDetailHeader extends StatelessWidget {
                   language,
                   style: TextStyle(color: AppConstant.appTextColor),
                 ),
-              ],
-            ),
-            Column(
-              children: [
-                Text(
-                  "Audio",
-                  style: TextStyle(color: AppConstant.appTextColor),
-                ),
-                audioLen.isEmpty
-                    ? Text(
-                        "No Audio for this file",
-                        style: TextStyle(
-                          color: AppConstant.appTextColor,
-                          fontSize: 12,
-                        ),
-                      )
-                    : Text(
-                        audioLen,
-                        style: TextStyle(color: AppConstant.appTextColor),
-                      ),
               ],
             ),
           ],
