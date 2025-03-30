@@ -53,9 +53,16 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     '${fileController.fAuth.currentUser!.email}',
                   ),
                   leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Image.network(
-                          '${fileController.fAuth.currentUser!.photoURL}'))),
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.network(
+                      fileController.fAuth.currentUser?.photoURL ??
+                          '', // Check if photoURL is available
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                            'assests/images/default_profile.png'); // Local image for email users
+                      },
+                    ),
+                  )),
             ),
             Divider(
               indent: 10.0,
