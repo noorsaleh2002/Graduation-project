@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:gp_2/models/TasksModel.dart';
-import 'package:gp_2/utils/App_constant.dart';
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields, must_be_immutable
 
-import 'firestorTodo.dart';
+import 'package:flutter/material.dart';
+import 'package:gp_2/Screens/ToDoList/firestorTodo.dart';
+
+import '../../models/TasksModel.dart';
+import '../../utils/App_constant.dart';
 
 class EditScreen extends StatefulWidget {
   Tasksmodel _task;
@@ -61,6 +63,19 @@ class _EditScreenState extends State<EditScreen> {
                 backgroundColor: AppConstant.appMainColor,
                 minimumSize: Size(170, 48)),
             onPressed: () {
+              if (title!.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Please Enter title!',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: AppConstant.appMainColor,
+                  ),
+                );
+                return;
+              }
+
               FireStore_Datasource().Update_task(
                   widget._task.id, indexx, title!.text, subtitle!.text);
               Navigator.pop(context);
@@ -77,7 +92,7 @@ class _EditScreenState extends State<EditScreen> {
               Navigator.pop(context);
             },
             child: Text(
-              "Cansel",
+              "Cancel",
               style: TextStyle(color: AppConstant.appTextColor),
             )),
       ],

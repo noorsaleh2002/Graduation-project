@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:gp_2/Screens/ToDoList/streamBuilder.dart';
 
 import '../../utils/App_constant.dart';
 import 'add_task.dart';
+import 'streamBuilder.dart';
 
 class AddTodoScreen extends StatefulWidget {
   const AddTodoScreen({super.key});
@@ -23,13 +23,14 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          iconTheme: IconThemeData(color: AppConstant.appTextColor),
-          centerTitle: true,
-          backgroundColor: AppConstant.appMainColor,
-          title: Text(
-            'To Do List',
-            style: TextStyle(color: AppConstant.appTextColor),
-          )),
+        iconTheme: IconThemeData(color: AppConstant.appTextColor),
+        centerTitle: true,
+        backgroundColor: AppConstant.appMainColor,
+        title: Text(
+          'To Do List',
+          style: TextStyle(color: AppConstant.appTextColor),
+        ),
+      ),
       backgroundColor: AppConstant.appTextColor,
       floatingActionButton: Visibility(
         visible: show,
@@ -47,44 +48,56 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
         ),
       ),
       body: SafeArea(
-          child: NotificationListener<UserScrollNotification>(
-        onNotification: (notification) {
-          if (notification.direction == ScrollDirection.forward) {
-            setState(() {
-              show = true;
-            });
-          }
-
-          if (notification.direction == ScrollDirection.reverse) {
-            setState(() {
-              show = false;
-            });
-          }
-          return true;
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stream_task(false),
-              const SizedBox(height: 20),
-              const Divider(
-                color: AppConstant.appMainColor,
-                thickness: 1,
-                indent: 20,
-                endIndent: 20,
-              ),
-              Text(
-                "isDone",
-                style: TextStyle(
+        child: NotificationListener<UserScrollNotification>(
+          onNotification: (notification) {
+            if (notification.direction == ScrollDirection.forward) {
+              setState(() {
+                show = true;
+              });
+            }
+            if (notification.direction == ScrollDirection.reverse) {
+              setState(() {
+                show = false;
+              });
+            }
+            return true;
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "Pending Tasks",
+                  style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.bold),
-              ),
-              Stream_task(true),
-            ],
+                    color: Colors.purple.shade500,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Stream_task(false, emptyMessage: "No pending tasks"),
+                const SizedBox(height: 20),
+                const Divider(
+                  color: AppConstant.appMainColor,
+                  thickness: 1,
+                  indent: 20,
+                  endIndent: 20,
+                ),
+                Text(
+                  "Completed Tasks",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.purple.shade500,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Stream_task(true, emptyMessage: "No completed tasks"),
+              ],
+            ),
           ),
         ),
-      )),
+      ),
     );
   }
 }
