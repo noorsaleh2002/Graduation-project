@@ -55,6 +55,7 @@ class SignUpController extends GetxController {
           .collection('users')
           .doc(userCredential.user!.uid)
           .set(userModel.toMap());
+
       EasyLoading.dismiss();
       return userCredential;
     } on FirebaseAuthException catch (e) {

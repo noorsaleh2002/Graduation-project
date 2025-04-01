@@ -22,7 +22,10 @@ class MainScreen extends StatelessWidget {
 
     // Get user's first name
     String userName = fileController.fAuth.currentUser?.displayName ?? "";
-    String firstName = userName.split(' ').first; // Getting only the first name
+    String userName1 = fileController.fAuth.currentUser?.email ?? "";
+    String firstName = userName.isNotEmpty
+        ? userName.split(' ').first
+        : userName1.split('@').first; // Getting only the first name
 
     // Get current hour to determine greeting
     int currentHour = DateTime.now().hour;
@@ -30,7 +33,7 @@ class MainScreen extends StatelessWidget {
         ? "Good morning ☀️🌼✨,"
         : (currentHour >= 12 && currentHour < 18
             ? "Good afternoon 🌞,"
-            : "Good evening 🌙,");
+            : "Good evening 🌙, ");
 
     return Scaffold(
       appBar: AppBar(
@@ -136,7 +139,7 @@ class MainScreen extends StatelessWidget {
                           padding: EdgeInsets.all(20),
                           child: Text(
                             'No files uploaded yet.',
-                            style: TextStyle(color: AppConstant.appTextColor),
+                            style: TextStyle(color: AppConstant.appMainColor),
                           ),
                         ),
                       );
