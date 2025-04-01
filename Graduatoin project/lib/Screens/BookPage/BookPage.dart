@@ -36,12 +36,16 @@ class _FilePageState extends State<FilePage> {
   List<String> _bookmarks = [];
   bool _isLoadingBookmarks = true;
 
+  int _currentSearchIndex = 0;
+  late PdfTextSearchResult _searchResult;
   @override
   void initState() {
     super.initState();
     _isLoadingBookmarks = true; // Start in loading state
     _pdfViewerController = PdfViewerController();
     _loadBookmarks();
+    _searchResult =
+        _pdfViewerController.searchText(""); // Initialize with empty search
   }
 
   void _zoomIn() {
@@ -51,6 +55,18 @@ class _FilePageState extends State<FilePage> {
   void _zoomOut() {
     if (_pdfViewerController.zoomLevel > 1.0) {
       _pdfViewerController.zoomLevel = _pdfViewerController.zoomLevel - 0.25;
+    }
+  }
+
+  void _nextSearchResult() {
+    if (_searchResult.hasResult) {
+      _searchResult.nextInstance();
+    }
+  }
+
+  void _previousSearchResult() {
+    if (_searchResult.hasResult) {
+      _searchResult.previousInstance();
     }
   }
 
@@ -295,15 +311,35 @@ class _FilePageState extends State<FilePage> {
         leading: BackButton(color: AppConstant.appTextColor),
         backgroundColor: AppConstant.appMainColor,
         title: _isSearching
-            ? TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  hintStyle: TextStyle(color: AppConstant.appTextColor),
-                  border: InputBorder.none,
-                ),
-                style: TextStyle(color: AppConstant.appTextColor),
-                onSubmitted: (query) => _pdfViewerController.searchText(query),
+            ? Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search...',
+                          hintStyle: TextStyle(color: AppConstant.appTextColor),
+                          border: InputBorder.none,
+                        ),
+                        style: TextStyle(color: AppConstant.appTextColor),
+                        onSubmitted: (query) {
+                          setState(() {
+                            _searchResult =
+                                _pdfViewerController.searchText(query);
+                          });
+                        }),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_upward,
+                        color: AppConstant.appTextColor),
+                    onPressed: _previousSearchResult,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_downward,
+                        color: AppConstant.appTextColor),
+                    onPressed: _nextSearchResult,
+                  ),
+                ],
               )
             : Text(widget.title,
                 style: TextStyle(color: AppConstant.appTextColor)),
