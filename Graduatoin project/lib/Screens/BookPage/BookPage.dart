@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, library_private_types_in_public_api, unused_field, sort_child_properties_last
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,9 +35,9 @@ class _FilePageState extends State<FilePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   List<String> _bookmarks = [];
   bool _isLoadingBookmarks = true;
-
   int _currentSearchIndex = 0;
   late PdfTextSearchResult _searchResult;
+
   @override
   void initState() {
     super.initState();
@@ -101,7 +101,19 @@ class _FilePageState extends State<FilePage> {
     if (user == null) return;
 
     final bookmarkName = _bookmarkController.text.trim();
-    if (bookmarkName.isEmpty) return;
+    if (bookmarkName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please Enter your Bookmark!',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: AppConstant.appMainColor,
+        ),
+      );
+      return;
+    }
+
     final fullBookmark =
         '$bookmarkName (Page ${_pdfViewerController.pageNumber})';
 
@@ -119,6 +131,15 @@ class _FilePageState extends State<FilePage> {
       }, SetOptions(merge: true));
 
       setState(() => _bookmarks.add(fullBookmark));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Success add Bookmark',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: AppConstant.appMainColor,
+        ),
+      );
       _bookmarkController.clear();
       Get.back();
     } catch (e) {
@@ -161,6 +182,7 @@ class _FilePageState extends State<FilePage> {
         controller: _bookmarkController,
         decoration: InputDecoration(
           hintText: 'Enter bookmark name',
+          hintStyle: TextStyle(color: Colors.grey),
           border: OutlineInputBorder(),
         ),
       ),
@@ -239,7 +261,7 @@ class _FilePageState extends State<FilePage> {
             itemBuilder: (context, index) => ListTile(
               title: Text(_bookmarks[index]),
               trailing: IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
+                icon: Icon(Icons.delete, color: AppConstant.appMainColor),
                 onPressed: () => _deleteBookmark(index),
               ),
               onTap: () {
@@ -282,17 +304,24 @@ class _FilePageState extends State<FilePage> {
                       color: AppConstant.appMainColor)),
               Expanded(
                 child: _bookmarks.isEmpty
-                    ? Center(child: Text("No bookmarks added yet"))
+                    ? Center(
+                        child: Text(
+                        "No bookmarks added yet",
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ))
                     : _buildBookmarksList(),
               ),
             ],
           ),
         ),
         actions: [
-          TextButton(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppConstant.appMainColor,
+            ),
             onPressed: _showAddBookmarkDialog,
             child: Text('Add Bookmark',
-                style: TextStyle(color: AppConstant.appMainColor)),
+                style: TextStyle(color: AppConstant.appTextColor)),
           ),
           TextButton(
             onPressed: () => Get.back(),
@@ -364,13 +393,17 @@ class _FilePageState extends State<FilePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            backgroundColor: AppConstant.appMainColor.withOpacity(0.7),
             heroTag: 'add_bookmark',
             onPressed: _showAddBookmarkDialog,
-            child: Icon(Icons.bookmark_add),
+            child: Icon(
+              Icons.bookmark_add,
+            ),
             mini: true,
           ),
           SizedBox(height: 10),
           FloatingActionButton(
+            backgroundColor: AppConstant.appMainColor.withOpacity(0.7),
             heroTag: 'view_bookmarks',
             onPressed: _showBookmarksDialog,
             child: Icon(Icons.bookmark),

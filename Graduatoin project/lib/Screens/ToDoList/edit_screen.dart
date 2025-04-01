@@ -1,10 +1,10 @@
 // ignore_for_file: non_constant_identifier_names, prefer_final_fields, must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:gp_2/Screens/ToDoList/firestorTodo.dart';
 
 import '../../models/TasksModel.dart';
 import '../../utils/App_constant.dart';
+import 'firestorTodo.dart';
 
 class EditScreen extends StatefulWidget {
   Tasksmodel _task;

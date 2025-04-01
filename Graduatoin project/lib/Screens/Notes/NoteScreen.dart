@@ -2,9 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gp_2/models/NoteModel.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/NoteModel.dart';
 import '../../utils/App_constant.dart';
 
 class NoteScreen extends StatefulWidget {
@@ -76,8 +76,8 @@ class _NoteScreenState extends State<NoteScreen> {
               style: TextStyle(color: AppConstant.appTextColor),
             )),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: AppConstant.appMainColor,
-          elevation: 2,
+          backgroundColor: AppConstant.appMainColor.withOpacity(0.6),
+          //elevation: 2,
           onPressed: openNoteBox,
           child: const Icon(Icons.add, color: AppConstant.appTextColor),
         ),

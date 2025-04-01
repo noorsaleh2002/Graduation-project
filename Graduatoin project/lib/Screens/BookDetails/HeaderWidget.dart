@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Import GetX
-import 'package:gp_2/utils/App_constant.dart' show AppConstant;
 //import 'package:zfffft/utils/app-constant.dart' show AppConstant;
 import '../../Componant/BackButton.dart';
+import '../../utils/App_constant.dart';
 
 class FileDetailHeader extends StatelessWidget {
   final String coverUrl;

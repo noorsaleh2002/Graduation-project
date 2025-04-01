@@ -4,18 +4,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gp_2/Screens/AddBook/AddNewBook.dart';
+import 'package:gp_2/Screens/main_screen.dart';
+import 'package:gp_2/controllers/book-controller.dart';
+import 'package:gp_2/controllers/google-sign-in-controller.dart';
 
 import '../ChatBot/chatbotScreen.dart';
 import '../GeminiModelSummarizer/summaryScreen.dart';
-import '../Screens/AddBook/AddNewBook.dart';
 import '../Screens/Notes/NoteScreen.dart';
 import '../Screens/ToDoList/AddTodo.dart';
 import '../Screens/Translation/translationScreen.dart';
 import '../Screens/auth-ui/welcom-scren.dart';
-import '../Screens/main_screen.dart';
 import '../Screens/setting/setting.dart';
-import '../controllers/book-controller.dart';
-import '../controllers/google-sign-in-controller.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -53,16 +53,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     '${fileController.fAuth.currentUser!.email}',
                   ),
                   leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.network(
-                      fileController.fAuth.currentUser?.photoURL ??
-                          '', // Check if photoURL is available
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                            'assests/images/default_profile.png'); // Local image for email users
-                      },
-                    ),
-                  )),
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                          '${fileController.fAuth.currentUser!.photoURL}'))),
             ),
             Divider(
               indent: 10.0,

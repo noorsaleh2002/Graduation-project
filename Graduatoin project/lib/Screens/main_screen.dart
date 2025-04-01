@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl/intl.dart'; // To format the time
+import 'package:intl/intl.dart';
 
 import '../Componant/FileCard.dart';
 import '../controllers/book-controller.dart';
@@ -11,7 +11,7 @@ import '../widgets/SearchTextFild.dart';
 import '../widgets/custom-drower-widget.dart';
 import 'AddBook/AddNewBook.dart';
 import 'BookDetails/BookDetail.dart';
-import 'auth-ui/welcom-scren.dart';
+import 'auth-ui/welcom-scren.dart'; // To format the time
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -166,7 +166,7 @@ class MainScreen extends StatelessWidget {
         onPressed: () {
           Get.to(() => AddFilePage()); // Navigate to the AddFileScreen
         },
-        backgroundColor: AppConstant.appMainColor,
+        backgroundColor: AppConstant.appMainColor.withOpacity(0.7),
         child: Icon(Icons.add, color: AppConstant.appTextColor),
       ),
     );

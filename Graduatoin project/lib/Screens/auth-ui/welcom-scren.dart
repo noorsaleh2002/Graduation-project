@@ -3,9 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gp_2/controllers/google-sign-in-controller.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../controllers/google-sign-in-controller.dart';
 import '../../utils/App_constant.dart';
 import 'sign-in-screen.dart';
 

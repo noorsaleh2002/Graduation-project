@@ -6,8 +6,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gp_2/Screens/main_screen.dart';
 
-import '../Screens/main_screen.dart';
 import '../models/user-model.dart';
 
 //this code from this site with some modification (https://www.scaler.com/topics/google-sign-in-flutter/)
