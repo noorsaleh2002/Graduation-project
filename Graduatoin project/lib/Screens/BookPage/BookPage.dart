@@ -37,24 +37,96 @@ class _FilePageState extends State<FilePage> {
   bool _isLoadingBookmarks = true;
   int _currentSearchIndex = 0;
   late PdfTextSearchResult _searchResult;
-
+// Add this variable to your state class
+  DateTime _lastPageSaveTime = DateTime.now();
+  bool _isInitialLoad = true;
+  bool _showFabMenu = false;
   @override
   void initState() {
     super.initState();
     _isLoadingBookmarks = true; // Start in loading state
-    _pdfViewerController = PdfViewerController();
-    _loadBookmarks();
+    _pdfViewerController =
+        PdfViewerController(); // Controller initialization happens here
+    // Call the listener setup right after initializing the controller
+    _setupPageChangeListener();
+
+    // Load both bookmarks and last page
+    _initializeReader();
+    // _loadBookmarks(); at last page ..
     _searchResult =
         _pdfViewerController.searchText(""); // Initialize with empty search
   }
 
+  @override
+  void dispose() {
+    // Save current page when the widget is disposed
+    _saveCurrentPageBeforeExit();
+    _pdfViewerController.dispose();
+    _searchController.dispose();
+    _bookmarkController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveCurrentPageBeforeExit() async {
+    final currentPage = _pdfViewerController.pageNumber;
+    if (currentPage != null) {
+      await _saveLastReadPage(currentPage);
+    }
+  }
+
+  Future<void> _initializeReader() async {
+    await _loadBookmarks();
+
+    final lastPage = await _loadLastReadPage();
+
+    if (lastPage != null && mounted && lastPage > 1) {
+      // Only jump if not page 1
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _pdfViewerController.jumpToPage(lastPage);
+        // Set flag to false after jump is complete
+        Future.delayed(const Duration(seconds: 2), () {
+          _isInitialLoad = false;
+        });
+      });
+    } else {
+      _isInitialLoad = false;
+    }
+    setState(() => _isLoadingBookmarks = false);
+  }
+
+// Add this method
+  void _setupPageChangeListener() {
+    _pdfViewerController.addListener(() async {
+      if (!_isInitialLoad) {
+        // Only save if not initial load
+        final now = DateTime.now();
+        if (now.difference(_lastPageSaveTime).inSeconds > 5) {
+          final currentPage = _pdfViewerController.pageNumber;
+          if (currentPage != null && currentPage > 1) {
+            // Also don't save page 1
+            await _saveLastReadPage(currentPage);
+            _lastPageSaveTime = now;
+          }
+        }
+      }
+    });
+  }
+
   void _zoomIn() {
+    final currentPage = _pdfViewerController.pageNumber;
     _pdfViewerController.zoomLevel = _pdfViewerController.zoomLevel + 0.25;
+    if (currentPage != null) {
+      _saveLastReadPage(currentPage);
+    }
   }
 
   void _zoomOut() {
+    final currentPage = _pdfViewerController.pageNumber;
     if (_pdfViewerController.zoomLevel > 1.0) {
       _pdfViewerController.zoomLevel = _pdfViewerController.zoomLevel - 0.25;
+    }
+    if (currentPage != null) {
+      _saveLastReadPage(currentPage);
     }
   }
 
@@ -333,6 +405,49 @@ class _FilePageState extends State<FilePage> {
     );
   }
 
+// Add these methods to your _FilePageState class for contune read page ..
+
+  Future<void> _saveLastReadPage(int pageNumber) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    try {
+      await _firestore
+          .collection('userFile')
+          .doc(user.uid)
+          .collection('ReadingProgress')
+          .doc(widget.fileid)
+          .set({
+        'lastPage': pageNumber,
+        'lastUpdated': FieldValue.serverTimestamp(),
+        'fileId': widget.fileid,
+        'fileTitle': widget.title,
+        'fileUrl': widget.fileUrl,
+      }, SetOptions(merge: true));
+    } catch (e) {
+      debugPrint('Error saving last page: $e');
+    }
+  }
+
+  Future<int?> _loadLastReadPage() async {
+    final user = _auth.currentUser;
+    if (user == null) return null;
+
+    try {
+      final doc = await _firestore
+          .collection('userFile')
+          .doc(user.uid)
+          .collection('ReadingProgress')
+          .doc(widget.fileid)
+          .get();
+
+      return doc.data()?['lastPage'] as int?;
+    } catch (e) {
+      debugPrint('Error loading last page: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -391,23 +506,61 @@ class _FilePageState extends State<FilePage> {
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          // Main FAB that toggles the menu
           FloatingActionButton(
-            backgroundColor: AppConstant.appMainColor.withOpacity(0.7),
-            heroTag: 'add_bookmark',
-            onPressed: _showAddBookmarkDialog,
-            child: Icon(
-              Icons.bookmark_add,
-            ),
+            backgroundColor: AppConstant.appMainColor,
+            heroTag: 'main_fab',
+            onPressed: () => setState(() => _showFabMenu = !_showFabMenu),
+            child: Icon(_showFabMenu ? Icons.close : Icons.menu),
             mini: true,
           ),
-          SizedBox(height: 10),
-          FloatingActionButton(
-            backgroundColor: AppConstant.appMainColor.withOpacity(0.7),
-            heroTag: 'view_bookmarks',
-            onPressed: _showBookmarksDialog,
-            child: Icon(Icons.bookmark),
-          ),
+
+          if (_showFabMenu) ...[
+            SizedBox(height: 10),
+            FloatingActionButton(
+              backgroundColor: AppConstant.appMainColor.withOpacity(0.7),
+              heroTag: 'add_bookmark',
+              onPressed: () {
+                _showAddBookmarkDialog();
+                setState(() => _showFabMenu = false);
+              },
+              child: Icon(Icons.bookmark_add),
+              mini: true,
+            ),
+            SizedBox(height: 10),
+            FloatingActionButton(
+              backgroundColor: AppConstant.appMainColor.withOpacity(0.7),
+              heroTag: 'view_bookmarks',
+              onPressed: () {
+                _showBookmarksDialog();
+                setState(() => _showFabMenu = false);
+              },
+              child: Icon(Icons.bookmark),
+              mini: true,
+            ),
+            SizedBox(height: 10),
+            FloatingActionButton(
+              backgroundColor: AppConstant.appMainColor.withOpacity(0.7),
+              heroTag: 'save_position',
+              onPressed: () async {
+                final currentPage = _pdfViewerController.pageNumber;
+                if (currentPage != null) {
+                  await _saveLastReadPage(currentPage);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Saved position: page $currentPage'),
+                      backgroundColor: AppConstant.appMainColor,
+                    ),
+                  );
+                }
+                setState(() => _showFabMenu = false);
+              },
+              child: Icon(Icons.save),
+              mini: true,
+            ),
+          ],
         ],
       ),
       body: Column(
@@ -417,12 +570,24 @@ class _FilePageState extends State<FilePage> {
             children: [
               IconButton(
                 icon: Icon(Icons.arrow_upward, color: AppConstant.appMainColor),
-                onPressed: _pdfViewerController.previousPage,
+                onPressed: () async {
+                  _pdfViewerController.previousPage();
+                  final currentPage = _pdfViewerController.pageNumber;
+                  if (currentPage != null) {
+                    await _saveLastReadPage(currentPage);
+                  }
+                },
               ),
               IconButton(
                 icon:
                     Icon(Icons.arrow_downward, color: AppConstant.appMainColor),
-                onPressed: _pdfViewerController.nextPage,
+                onPressed: () async {
+                  _pdfViewerController.nextPage();
+                  final currentPage = _pdfViewerController.pageNumber;
+                  if (currentPage != null) {
+                    await _saveLastReadPage(currentPage);
+                  }
+                },
               ),
               IconButton(
                 icon: Icon(Icons.zoom_in, color: AppConstant.appMainColor),
