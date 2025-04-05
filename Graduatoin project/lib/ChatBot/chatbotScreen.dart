@@ -16,10 +16,14 @@ class Chatbotscreen extends StatefulWidget {
 
 class _ChatbotscreenState extends State<Chatbotscreen> {
   final Gemini gemini = Gemini.instance;
-  List<ChatMessage> massages = [];
-  ChatUser currentUser = ChatUser(id: "0", firstName: "User");
-  ChatUser geminiUser = ChatUser(
-      id: "1", firstName: "Gemini", profileImage: 'assests/images/gmini.jpeg');
+  List<ChatMessage> messages = [];
+  final ChatUser currentUser = ChatUser(id: "0", firstName: "User");
+  final ChatUser geminiUser = ChatUser(
+      id: "1",
+      firstName: "Gemini",
+      profileImage:
+          'https://www.boisestate.edu/oit/wp-content/uploads/sites/42/2023/08/Google_Bard_logo-300x300.jpg' // Fixed path
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -39,65 +43,102 @@ class _ChatbotscreenState extends State<Chatbotscreen> {
 
   Widget _buildUI() {
     return DashChat(
-        inputOptions: InputOptions(trailing: [
+      inputOptions: InputOptions(
+        trailing: [
           IconButton(
-              onPressed: _SendMediaMessage, icon: const Icon(Icons.image))
-        ]),
-        currentUser: currentUser,
-        onSend: _sendMessage,
-        messages: massages);
+              onPressed: _sendMediaMessage, icon: const Icon(Icons.image))
+        ],
+        inputTextStyle: TextStyle(color: const Color.fromARGB(255, 66, 7, 77)),
+      ),
+      currentUser: currentUser,
+      onSend: _sendMessage,
+      messages: messages,
+      messageOptions: MessageOptions(
+        currentUserContainerColor: AppConstant.appMainColor.withOpacity(0.5),
+        containerColor: AppConstant.appTextColor2,
+        textColor: AppConstant.appTextColor,
+      ),
+    );
   }
 
-  //this function will be called when the user enter the send button
-  void _sendMessage(ChatMessage chatMassage) {
+  void _sendMessage(ChatMessage chatMessage) {
     setState(() {
-      massages = [chatMassage, ...massages];
+      messages = [chatMessage, ...messages];
     });
+
     try {
-      String question = chatMassage.text; //this message will pass to gimini
+      String question = chatMessage.text;
       List<Uint8List>? images;
-      if (chatMassage.medias?.isNotEmpty ?? false) {
-        //this means that file,image,media attached
-        images = [File(chatMassage.medias!.first.url).readAsBytesSync()];
+
+      if (chatMessage.medias?.isNotEmpty ?? false) {
+        images = [File(chatMessage.medias!.first.url).readAsBytesSync()];
       }
+
       gemini.streamGenerateContent(question, images: images).listen((event) {
-        ChatMessage? lastMessage = massages.firstOrNull;
-        if (lastMessage != null && lastMessage.user == geminiUser) {
-          lastMessage = massages.removeAt(0);
-          String responce = event.content?.parts //current.text
-                  ?.fold(
-                      "",
-                      (previous, current) =>
-                          "$previous ${current.toString()}") ??
-              "";
-          lastMessage.text += responce;
-          setState(() {
-            massages = [lastMessage!, ...massages];
-          });
-        } else {
-          String responce = event.content?.parts //current.text not toString
-                  ?.fold(
-                      "",
-                      (previous, current) =>
-                          "$previous ${current.toString()}") ??
-              "";
-          ChatMessage message = ChatMessage(
-              user: geminiUser, createdAt: DateTime.now(), text: responce);
-          setState(() {
-            massages = [message, ...massages];
-          });
-        }
+        String response = event.content?.parts
+                ?.whereType<TextPart>()
+                .map((part) => part.text)
+                .join(" ") ??
+            "";
+
+        setState(() {
+          // Check if there's an existing Gemini message to update
+          final index = messages
+              .indexWhere((m) => m.user == geminiUser && m == messages.first);
+
+          if (index != -1) {
+            // Update existing message by creating new instance
+            final updatedMessage = ChatMessage(
+              user: messages[index].user,
+              createdAt: messages[index].createdAt,
+              text: messages[index].text + response,
+              medias: messages[index].medias,
+            );
+            messages[index] = updatedMessage;
+          } else {
+            // Add new message
+            messages = [
+              ChatMessage(
+                user: geminiUser,
+                createdAt: DateTime.now(),
+                text: response,
+              ),
+              ...messages,
+            ];
+          }
+        });
+      }, onError: (error) {
+        setState(() {
+          messages = [
+            ChatMessage(
+              user: geminiUser,
+              createdAt: DateTime.now(),
+              text: "Error: ${error.toString()}",
+            ),
+            ...messages,
+          ];
+        });
       });
     } catch (e) {
-      print(e);
+      setState(() {
+        messages = [
+          ChatMessage(
+            user: geminiUser,
+            createdAt: DateTime.now(),
+            text: "Error: ${e.toString()}",
+          ),
+          ...messages,
+        ];
+      });
     }
   }
 
-  void _SendMediaMessage() async {
-    ImagePicker picker = ImagePicker();
-    XFile? file = await picker.pickImage(source: ImageSource.gallery);
+  Future<void> _sendMediaMessage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+
     if (file != null) {
-      ChatMessage chatMessage = ChatMessage(
+      final ChatMessage chatMessage = ChatMessage(
           user: currentUser,
           createdAt: DateTime.now(),
           text: "Describe this picture?",
