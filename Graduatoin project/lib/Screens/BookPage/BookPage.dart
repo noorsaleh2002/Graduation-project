@@ -29,6 +29,7 @@ class _FilePageState extends State<FilePage> {
   final PdfController pdfController = Get.put(PdfController());
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _bookmarkController = TextEditingController();
+
   bool _isSearching = false;
   late PdfViewerController _pdfViewerController;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -36,11 +37,16 @@ class _FilePageState extends State<FilePage> {
   List<String> _bookmarks = [];
   bool _isLoadingBookmarks = true;
   int _currentSearchIndex = 0;
-  late PdfTextSearchResult _searchResult;
+  // late PdfTextSearchResult _searchResult;
 // Add this variable to your state class
   DateTime _lastPageSaveTime = DateTime.now();
   bool _isInitialLoad = true;
   bool _showFabMenu = false;
+  PdfTextSearchResult _searchResult = PdfTextSearchResult();
+  bool _showNotFoundMessage = false;
+// Add this variable to track search state
+  bool _isSearchingInProgress = false;
+
   @override
   void initState() {
     super.initState();
@@ -53,8 +59,13 @@ class _FilePageState extends State<FilePage> {
     // Load both bookmarks and last page
     _initializeReader();
     // _loadBookmarks(); at last page ..
-    _searchResult =
-        _pdfViewerController.searchText(""); // Initialize with empty search
+    _searchController.addListener(() {
+      if (_searchController.text.isEmpty && _showNotFoundMessage) {
+        setState(() {
+          _showNotFoundMessage = false;
+        });
+      }
+    });
   }
 
   @override
@@ -92,6 +103,34 @@ class _FilePageState extends State<FilePage> {
       _isInitialLoad = false;
     }
     setState(() => _isLoadingBookmarks = false);
+  }
+
+  void _searchText(String query) {
+    if (query.trim().isEmpty) {
+      setState(() {
+        _showNotFoundMessage = false;
+        _isSearchingInProgress = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isSearchingInProgress = true;
+      _showNotFoundMessage = false;
+    });
+
+    final result = _pdfViewerController.searchText(query);
+
+    result.addListener(() {
+      if (mounted) {
+        setState(() {
+          _searchResult = result;
+          _isSearchingInProgress = false;
+          // Only show not found if search is complete and has no results
+          _showNotFoundMessage = !result.hasResult && !_isSearchingInProgress;
+        });
+      }
+    });
   }
 
 // Add this method
@@ -459,30 +498,48 @@ class _FilePageState extends State<FilePage> {
                 children: [
                   Expanded(
                     child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search...',
-                          hintStyle: TextStyle(color: AppConstant.appTextColor),
-                          border: InputBorder.none,
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search...',
+                        hintStyle: TextStyle(color: AppConstant.appTextColor),
+                        border: InputBorder.none,
+                      ),
+                      style: TextStyle(color: AppConstant.appTextColor),
+                      onSubmitted: (query) => _searchText(query),
+                    ),
+                  ),
+                  if (_isSearchingInProgress)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppConstant.appTextColor,
                         ),
-                        style: TextStyle(color: AppConstant.appTextColor),
-                        onSubmitted: (query) {
-                          setState(() {
-                            _searchResult =
-                                _pdfViewerController.searchText(query);
-                          });
-                        }),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.arrow_upward,
-                        color: AppConstant.appTextColor),
-                    onPressed: _previousSearchResult,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.arrow_downward,
-                        color: AppConstant.appTextColor),
-                    onPressed: _nextSearchResult,
-                  ),
+                      ),
+                    ),
+                  if (_showNotFoundMessage && !_isSearchingInProgress)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Text(
+                        'Not found',
+                        style: TextStyle(color: Colors.red, fontSize: 15),
+                      ),
+                    ),
+                  if (_searchResult.hasResult && !_isSearchingInProgress) ...[
+                    IconButton(
+                      icon: Icon(Icons.arrow_upward,
+                          color: AppConstant.appTextColor),
+                      onPressed: _previousSearchResult,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.arrow_downward,
+                          color: AppConstant.appTextColor),
+                      onPressed: _nextSearchResult,
+                    ),
+                  ],
                 ],
               )
             : Text(widget.title,
@@ -497,6 +554,8 @@ class _FilePageState extends State<FilePage> {
                 if (_isSearching) {
                   _searchController.clear();
                   _pdfViewerController.clearSelection();
+                  _showNotFoundMessage = false;
+                  _isSearchingInProgress = false;
                 }
                 _isSearching = !_isSearching;
               });
