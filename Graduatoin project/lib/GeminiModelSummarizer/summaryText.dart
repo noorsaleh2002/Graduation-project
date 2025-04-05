@@ -15,8 +15,12 @@ class Summarytext extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: AppConstant.appTextColor),
         backgroundColor: AppConstant.appMainColor,
-        title: Text("Summary"),
+        title: Text(
+          "Summary",
+          style: TextStyle(color: AppConstant.appTextColor),
+        ),
         centerTitle: true,
       ),
       body: Padding(

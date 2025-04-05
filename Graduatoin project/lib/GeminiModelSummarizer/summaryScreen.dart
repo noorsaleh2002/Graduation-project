@@ -235,34 +235,38 @@ class _SummaryscreenState extends State<Summaryscreen> {
           "History",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        ListView.builder(
-          itemCount: summaries.length,
-          itemBuilder: (context, index) {
-            final summary = summaries[index].data() as Map<String, dynamic>;
-            return ListTile(
-              title: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  summary['fileName'],
-                  style: const TextStyle(fontSize: 16),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: summaries.length,
+            itemBuilder: (context, index) {
+              final summary = summaries[index].data() as Map<String, dynamic>;
+              return ListTile(
+                title: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    summary['fileName'],
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Summarytext(
-                              fileName: summary['fileNAme'],
-                              summary: summary['summary'],
-                              isHistory: true,
-                            )));
-              },
-              trailing: IconButton(
-                  onPressed: () =>
-                      _summaryService.deleteSummary(summaries[index].id),
-                  icon: const Icon(Icons.delete)),
-            );
-          },
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Summarytext(
+                                fileName: summary['fileName'],
+                                summary: summary['summary'],
+                                isHistory: true,
+                              )));
+                },
+                trailing: IconButton(
+                    onPressed: () =>
+                        _summaryService.deleteSummary(summaries[index].id),
+                    icon: const Icon(Icons.delete)),
+              );
+            },
+          ),
         )
       ],
     );

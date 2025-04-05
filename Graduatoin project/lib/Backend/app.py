@@ -8,9 +8,9 @@ app = Flask(__name__)
 @app.route('/api/summarize', methods=['POST'])
 def summarize_document():
     # Configure the Gemini API key
-    genai.configure(api_key='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')
+    genai.configure(api_key='AIzaSyCBufkBpX7glWU30DmyosmOzbHQmipEydM')
 
-    model = genai.GenerativeModel('google/gemini-2.0-pro-exp-02-05:free')
+    model = genai.GenerativeModel('gemini-2.0-flash')
 
     # Log incoming request for debugging
     print("Incoming request:")
