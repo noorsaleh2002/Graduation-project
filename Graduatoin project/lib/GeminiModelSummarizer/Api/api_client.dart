@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiClient {
-  final String _baseUrl = 'http://192.168.8.62:5000/api';
+  final String _baseUrl = 'http://192.168.1.127:5000/api';
 
   Future<String> summarizerDocument(
     String filePath,
