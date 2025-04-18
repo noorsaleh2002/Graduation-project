@@ -1,14 +1,22 @@
+// ignore_for_file: file_names, avoid_print, use_build_context_synchronously
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:gp_2/GeminiModelSummarizer/Api/summary_service.dart';
-import 'package:gp_2/GeminiModelSummarizer/PreiewScreen.dart';
-import 'package:gp_2/GeminiModelSummarizer/summaryText.dart';
-import 'package:gp_2/utils/App_constant.dart';
+import 'package:open_file/open_file.dart';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:permission_handler/permission_handler.dart';
+import '../utils/App_constant.dart';
+import 'Api/summary_service.dart';
+import 'PreiewScreen.dart';
+import 'summaryText.dart';
 
 class Summaryscreen extends StatefulWidget {
   const Summaryscreen({super.key});
-
   @override
   State<Summaryscreen> createState() => _SummaryscreenState();
 }
@@ -18,6 +26,43 @@ class _SummaryscreenState extends State<Summaryscreen> {
   PlatformFile? file;
   double summaryLength = 0.5;
   double detailLevel = 2;
+
+  Future<void> _downloadPDF(
+      String content, String fileName, BuildContext context) async {
+    final pdf = pw.Document();
+    pdf.addPage(pw.Page(build: (pw.Context ctx) => pw.Text(content)));
+
+    try {
+      // Request permission
+      final status = await Permission.storage.request();
+      if (!status.isGranted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Storage permission is required")),
+        );
+        return;
+      }
+
+      // Get the storage directory
+      final dir = await getExternalStorageDirectory();
+      final filePath = "${dir!.path}/$fileName";
+      final file = File(filePath);
+
+      await file.writeAsBytes(await pdf.save());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text("Downloaded Done!"),
+            backgroundColor: AppConstant.appMainColor),
+      );
+      OpenFile.open(filePath);
+    } catch (e) {
+      print("Download error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to download PDF")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +139,8 @@ class _SummaryscreenState extends State<Summaryscreen> {
             print(stacktrace);
           }
         },
-        child: const Text("Summarize"));
+        child: const Text("Summarize",
+            style: TextStyle(color: AppConstant.appMainColor)));
   }
 
   Column summaryLevelSlider() {
@@ -230,10 +276,19 @@ class _SummaryscreenState extends State<Summaryscreen> {
         const SizedBox(
           height: 20,
         ),
-        const Divider(),
+        const Divider(
+          color: AppConstant.appMainColor,
+          thickness: 1,
+          indent: 20,
+          endIndent: 20,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
         const Text(
           "History",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.purple),
         ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.4,
@@ -242,12 +297,15 @@ class _SummaryscreenState extends State<Summaryscreen> {
             itemCount: summaries.length,
             itemBuilder: (context, index) {
               final summary = summaries[index].data() as Map<String, dynamic>;
+              final fileName =
+                  summary['fileName'].toString().replaceAll('.pdf', '');
               return ListTile(
                 title: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    summary['fileName'],
-                    style: const TextStyle(fontSize: 16),
+                    fileName,
+                    style: const TextStyle(
+                        fontSize: 16, color: AppConstant.appTextColor2),
                   ),
                 ),
                 onTap: () {
@@ -260,10 +318,26 @@ class _SummaryscreenState extends State<Summaryscreen> {
                                 isHistory: true,
                               )));
                 },
-                trailing: IconButton(
-                    onPressed: () =>
-                        _summaryService.deleteSummary(summaries[index].id),
-                    icon: const Icon(Icons.delete)),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.download,
+                          color: AppConstant.appMainColor),
+                      onPressed: () async {
+                        await _downloadPDF(
+                            summary['summary'], summary['fileName'], context);
+                      },
+                    ),
+                    IconButton(
+                        onPressed: () =>
+                            _summaryService.deleteSummary(summaries[index].id),
+                        icon: const Icon(
+                          Icons.delete,
+                          color: AppConstant.appMainColor,
+                        )),
+                  ],
+                ),
               );
             },
           ),
