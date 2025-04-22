@@ -21,7 +21,7 @@ class WelcomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppConstant.appMainColor,
         title: Text(
-          "Welcome to study friend app",
+          "Welcome to LAN app",
           style: TextStyle(
             color: AppConstant.appTextColor,
           ),

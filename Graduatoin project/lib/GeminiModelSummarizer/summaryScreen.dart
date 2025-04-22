@@ -26,6 +26,13 @@ class _SummaryscreenState extends State<Summaryscreen> {
   PlatformFile? file;
   double summaryLength = 0.5;
   double detailLevel = 2;
+  Future<bool> requestPermission() async {
+    final images = await Permission.photos.request();
+    final audio = await Permission.audio.request();
+    final video = await Permission.videos.request();
+
+    return images.isGranted || audio.isGranted || video.isGranted;
+  }
 
   Future<void> _downloadPDF(
       String content, String fileName, BuildContext context) async {
@@ -34,17 +41,23 @@ class _SummaryscreenState extends State<Summaryscreen> {
 
     try {
       // Request permission
-      final status = await Permission.storage.request();
-      if (!status.isGranted) {
+      final status = await requestPermission();
+      if (!status) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Storage permission is required")),
         );
+        // openAppSettings(); // You can guide user to manually enable it
         return;
       }
 
       // Get the storage directory
-      final dir = await getExternalStorageDirectory();
-      final filePath = "${dir!.path}/$fileName";
+      // final dir = await getExternalStorageDirectory();
+      // final filePath = "${dir!.path}/$fileName";
+      final downloadsDir = Directory('/storage/emulated/0/Download');
+      if (!downloadsDir.existsSync()) {
+        downloadsDir.createSync(recursive: true);
+      }
+      final filePath = '${downloadsDir.path}/$fileName.pdf';
       final file = File(filePath);
 
       await file.writeAsBytes(await pdf.save());

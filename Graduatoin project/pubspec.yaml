@@ -45,7 +45,7 @@ dependencies:
   flutter_easyloading: ^3.0.5
   firebase_messaging: ^15.2.4
   flutter_svg: ^2.0.17
-  syncfusion_flutter_pdfviewer: ^24.2.9
+  syncfusion_flutter_pdfviewer: ^27.2.5
   uuid: ^4.5.1
   firebase_storage: ^12.4.4
   image_picker: ^1.1.2
@@ -60,13 +60,14 @@ dependencies:
   http: ^1.3.0
   flutter_gemini: ^3.0.0
   dash_chat_2: ^0.0.21
-  syncfusion_flutter_pdf: 24.2.9
+
   open_file: ^3.3.2
   permission_handler: ^11.3.1
   pdf: ^3.10.8
   printing: ^5.11.0
   path_provider: ^2.1.2
-  
+  shared_preferences: ^2.5.3
+  date_format: ^2.0.9
   
   
   
@@ -77,13 +78,19 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.13.1"  
+flutter_icons:
+   android: true
+   ios: true
+   image_path: "assests/images/iconapp.png"
+   adaptive_icon_foreground: "assests/images/iconapp.png"  # Optional for Android adaptive icon
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+   flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -46,6 +46,9 @@ class _FilePageState extends State<FilePage> {
   bool _showNotFoundMessage = false;
 // Add this variable to track search state
   bool _isSearchingInProgress = false;
+  bool _showToolbar = false;
+  PdfAnnotationMode _currentMode = PdfAnnotationMode.none;
+  String? _selectedText;
 
   @override
   void initState() {
@@ -487,6 +490,54 @@ class _FilePageState extends State<FilePage> {
     }
   }
 
+  void _setAnnotationMode(PdfAnnotationMode mode) {
+    setState(() {
+      // Toggle: tap same icon again to disable
+      if (_currentMode == mode) {
+        _pdfViewerController.annotationMode = PdfAnnotationMode.none;
+        _currentMode = PdfAnnotationMode.none;
+      } else {
+        _pdfViewerController.annotationMode = mode;
+        _currentMode = mode;
+      }
+
+      _showToolbar = false;
+    });
+  }
+
+  void _onTextSelectionChanged(PdfTextSelectionChangedDetails details) {
+    // Auto-clear annotation mode after selection
+    if (details.selectedText != null && details.selectedText!.isNotEmpty) {
+      if (_currentMode != PdfAnnotationMode.none) {
+        // Let annotation apply, then reset mode after delay
+        Future.delayed(const Duration(milliseconds: 300), () {
+          _pdfViewerController.annotationMode = PdfAnnotationMode.none;
+          setState(() {
+            _currentMode = PdfAnnotationMode.none;
+          });
+        });
+      }
+    }
+  }
+
+  void _clearAnnotationAndSelection() {
+    // Make a copy of the list to avoid concurrent modification
+    final annotations =
+        List<Annotation>.from(_pdfViewerController.getAnnotations());
+
+    for (final annotation in annotations) {
+      _pdfViewerController.removeAnnotation(annotation);
+    }
+
+    // Clear selection and reset state
+    _pdfViewerController.clearSelection();
+    setState(() {
+      _currentMode = PdfAnnotationMode.none;
+      _selectedText = null;
+      _showToolbar = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -558,6 +609,17 @@ class _FilePageState extends State<FilePage> {
                   _isSearchingInProgress = false;
                 }
                 _isSearching = !_isSearching;
+              });
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.edit,
+              color: AppConstant.appTextColor,
+            ),
+            onPressed: () {
+              setState(() {
+                _showToolbar = !_showToolbar;
               });
             },
           ),
@@ -662,10 +724,96 @@ class _FilePageState extends State<FilePage> {
             child: SfPdfViewer.network(
               widget.fileUrl,
               controller: _pdfViewerController,
-              key: pdfController.pdfViewerKey,
+              enableTextSelection: true,
+              interactionMode: PdfInteractionMode.selection,
+              onTextSelectionChanged: _onTextSelectionChanged,
             ),
           ),
+          if (_showToolbar)
+            Positioned(
+              top: 80,
+              left: 10,
+              right: 10,
+              child: _buildAnnotationToolbar(),
+            ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAnnotationToolbar() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Wrap(
+          spacing: 10,
+          children: [
+            IconButton(
+              icon: Icon(Icons.highlight,
+                  color: _currentMode == PdfAnnotationMode.highlight
+                      ? Colors.orange
+                      : null),
+              tooltip: 'Highlight',
+              onPressed: () => _setAnnotationMode(PdfAnnotationMode.highlight),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            IconButton(
+              icon: Icon(Icons.format_underline,
+                  color: _currentMode == PdfAnnotationMode.underline
+                      ? Colors.orange
+                      : null),
+              tooltip: 'Underline',
+              onPressed: () => _setAnnotationMode(PdfAnnotationMode.underline),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            IconButton(
+              icon: Icon(Icons.strikethrough_s,
+                  color: _currentMode == PdfAnnotationMode.strikethrough
+                      ? Colors.orange
+                      : null),
+              tooltip: 'Strikethrough',
+              onPressed: () =>
+                  _setAnnotationMode(PdfAnnotationMode.strikethrough),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            IconButton(
+              icon: Icon(Icons.format_overline,
+                  color: _currentMode == PdfAnnotationMode.squiggly
+                      ? Colors.orange
+                      : null),
+              tooltip: 'Squiggly',
+              onPressed: () => _setAnnotationMode(PdfAnnotationMode.squiggly),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            IconButton(
+              icon: Icon(Icons.sticky_note_2_outlined,
+                  color: _currentMode == PdfAnnotationMode.stickyNote
+                      ? Colors.orange
+                      : null),
+              tooltip: 'Sticky Note',
+              onPressed: () => _setAnnotationMode(PdfAnnotationMode.stickyNote),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete_forever, color: Colors.red),
+              tooltip: 'Remove Annotation (Clear Selection)',
+              onPressed: _clearAnnotationAndSelection,
+            ),
+          ],
+        ),
       ),
     );
   }
