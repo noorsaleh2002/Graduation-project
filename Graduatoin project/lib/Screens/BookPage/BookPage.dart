@@ -399,6 +399,10 @@ class _FilePageState extends State<FilePage> {
               // Button to open Syncfusion's native bookmark panel
               ElevatedButton(
                 onPressed: () {
+                  print("Button pressed");
+                  print("pdfController: ${pdfController}");
+                  print(
+                      "pdfViewerKey currentState: ${pdfController.pdfViewerKey.currentState}");
                   pdfController.pdfViewerKey.currentState?.openBookmarkView();
                   Get.back();
                 },
@@ -724,6 +728,7 @@ class _FilePageState extends State<FilePage> {
             child: SfPdfViewer.network(
               widget.fileUrl,
               controller: _pdfViewerController,
+              key: pdfController.pdfViewerKey,
               enableTextSelection: true,
               interactionMode: PdfInteractionMode.selection,
               onTextSelectionChanged: _onTextSelectionChanged,
